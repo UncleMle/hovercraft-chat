@@ -23,5 +23,5 @@ db.sequelize.sync().then(() => {
 
 
 routes.routes.forEach(route => {
-    app.use(route.path, require(route.location));
+    app.use(route.path, require(route.location)[route.func]);
 })
