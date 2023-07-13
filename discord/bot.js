@@ -42,4 +42,5 @@ client.on('ready', () => {
         })
         .catch(console.error);
     }, config.UpdateInter*1000);
+
 });
