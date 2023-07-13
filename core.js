@@ -6,17 +6,22 @@ const runPort = 8081;
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const routes = require('./routes');
+const db = require('./models');
 
 app.use(morgan('combined'));
 app.use(bodyParser.json());
 app.use(cors());
 app.listen(runPort);
 
-api.log(`Server now running on port ${runPort}`);
+api.log(`Server now running on port ${runPort} with a total of ${routes.routes.length} endpoints.`);
 
-const db = require('./models')
-
-db.sequelize.sync().then((req) => {
-    logging: true
-    api.log(`[SEQUELIZE] Sequelize is now running.`)
+db.sequelize.sync().then(() => {
+    logging: false
+    api.log(`Sequelize is now running.`);
 });
+
+
+routes.routes.forEach(route => {
+    app.use(route.path, require(route.location));
+})
