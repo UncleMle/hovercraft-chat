@@ -2,6 +2,7 @@
 node_modules
 /dist
 
+./discord/botConf.json
 
 # local env files
 .env.local
