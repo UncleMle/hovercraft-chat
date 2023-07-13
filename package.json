@@ -4,7 +4,7 @@
   "description": "Hovercraft web app",
   "main": "router.js",
   "scripts": {
-    "devstart": "node core.js"
+    "devstart": "node core.js && node ./discord/bot.js"
   },
   "author": "",
   "license": "ISC",
