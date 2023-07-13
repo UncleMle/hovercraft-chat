@@ -14,4 +14,9 @@ app.listen(runPort);
 
 api.log(`Server now running on port ${runPort}`);
 
+const db = require('./models')
 
+db.sequelize.sync().then((req) => {
+    logging: true
+    api.log(`[SEQUELIZE] Sequelize is now running.`)
+});
