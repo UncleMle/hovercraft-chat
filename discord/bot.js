@@ -32,10 +32,12 @@ client.on('ready', () => {
             .setDescription('Current service statistics for hovercraft.chat')
             .addFields(
                 { name: 'Endpoint total', value: `${routes.routes.length}`, inline: true },
-                { name: 'Uptime', value: `100.00%`, inline: true },
+                { name: 'Api Uptime', value: `100.00%`, inline: true },
+                { name: 'Frontend Uptime', value: `100.00%`, inline: true },
                 { name: 'Domain', value: `https://${config.domain}`, inline: true },
-                { name: 'Total Chat Sessions', value: `${await db.chat_session_ids.findAll({}).then(csid => csid.length)}`, inline: true },
-                { name: 'Total Accounts registered', value: `${await db.accounts.findAll({}).then(acc => acc.length)}`, inline: true }
+                { name: 'Total Chat Sessions', value: `${await db.chat_sessions.findAll({}).then(csid => csid.length)}`, inline: true },
+                { name: 'Total Accounts registered', value: `${await db.accounts.findAll({}).then(acc => acc.length)}`, inline: true },
+                { name: 'Total Requests sent', value: `${await db.web_tokens.findAll({}).then(tokens => tokens.length)}`, inline: true }
             )
             .setTimestamp()
             message.edit({ embeds: [serviceStats] });
