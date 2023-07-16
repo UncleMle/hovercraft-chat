@@ -7,8 +7,6 @@ import bodyParser from 'body-parser';
 import routes from './hover.routes';
 import 'reflect-metadata';
 
-import { AppDataSource } from "./db/data-source";
-import { webTokens } from './db/entities/hover.webTokens';
 import dc from './discord/hover.discord';
 
 const api = new apiMethods();

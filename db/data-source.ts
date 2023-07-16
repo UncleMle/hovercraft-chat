@@ -11,9 +11,7 @@ export const AppDataSource = new DataSource({
     database: "hovercraft.chat",
     synchronize: true,
     logging: false,
-    entities: [
-        webTokens
-    ],
+    entities: [webTokens],
     migrations: [],
     subscribers: [],
 })
