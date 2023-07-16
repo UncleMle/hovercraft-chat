@@ -22,7 +22,7 @@ class apiMethods {
             {
                 res.status(401).send({
                     status: false,
-                    error: 'You do not have authorization to access this resource'
+                    error: 'You do not have authorization to access this resource or the token entered was invalid or not specified.'
                 });
                 break;
             }
