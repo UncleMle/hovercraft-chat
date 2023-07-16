@@ -9,6 +9,7 @@ import 'reflect-metadata';
 
 import { AppDataSource } from "./db/data-source";
 import { webTokens } from './db/entities/hover.webTokens';
+import dc from './discord/hover.discord';
 
 const api = new apiMethods();
 
@@ -25,3 +26,5 @@ app.listen(port, (): void => {
 });
 
 api.Log(`All ${routes.length} routes were loaded.`);
+
+dc?api.Log('Discord intergration now running'):"";
