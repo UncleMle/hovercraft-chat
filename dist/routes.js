@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let routes = [
-    { path: '/test', location: 'test', func: 'test' }
+    { path: '/test', location: './endpoints/hover.auth.ts' }
 ];
 exports.default = routes;

@@ -1,5 +1,5 @@
 let routes : object[] = [
-    { path: '/test', location: 'test', func: 'test' }
+    { path: '/test', location: './endpoints/hover.auth.ts' }
 ]
 
 export default routes;
