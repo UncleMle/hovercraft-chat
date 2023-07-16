@@ -1,26 +1,16 @@
 {
   "name": "hovercraft-main",
   "version": "1.0.0",
-  "description": "Hovercraft web app",
-  "main": "router.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "devstart": "node core.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
-    "discord.js": "^14.11.0",
     "express": "^4.18.2",
-    "express-rate-limit": "^6.7.1",
-    "fs": "^0.0.1-security",
-    "jsonwebtoken": "^9.0.1",
-    "morgan": "^1.10.0",
-    "mysql2": "^3.5.1",
-    "path": "^0.12.7",
-    "process": "^0.11.10",
-    "sequelize": "^6.32.1",
-    "webscrape": "^3.0.0"
+    "touch": "^3.1.0"
   }
 }
