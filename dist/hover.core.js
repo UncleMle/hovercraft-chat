@@ -17,8 +17,11 @@ app.use(body_parser_1.default.json());
 app.listen(port, () => {
     api.Log(`App is now listening on port ${port}`);
 });
-/*
-routes.forEach((route : any) => {
-    app.use(route.path, require(route.location));
+const hover_auth_1 = __importDefault(require("./endpoints/hover.auth"));
+let routes = [
+    { path: '/auth', location: hover_auth_1.default }
+];
+routes.forEach((route) => {
+    app.use(route.path, route.location);
 });
-*/ 
+api.Log(`All ${routes.length} routes were loaded.`);
