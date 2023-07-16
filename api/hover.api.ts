@@ -3,16 +3,16 @@ import jwt from 'jsonwebtoken';
 
 class apiMethods {
 
-    Log(text : any) {
+    Log(text : any): void {
         console.log(`${this.srvTime()} | ${text}`);
     }
 
-    srvTime() {
+    srvTime(): string {
         var date = new Date();
         return `${date.getHours() < 10 ? "0"+date.getHours() : date.getHours()}:${date.getMinutes() < 10 ? "0"+date.getMinutes() : date.getMinutes()}:${date.getSeconds() < 10 ? "0"+date.getSeconds() : date.getSeconds()}`;
     }
 
-    getUnix() {
+    getUnix(): number {
         return Math.round(Date.now() / 1000);
     }
 
@@ -47,7 +47,7 @@ class apiMethods {
         }
     }
 
-    async authToken(token : string) {
+    async authToken(token : string): Promise<boolean> {
         if(!token) return;
         try {
             const decoded = jwt.verify(token, "jwtPrivateKey");
@@ -57,7 +57,7 @@ class apiMethods {
         }
     }
 
-    charGen(len : number) {
+    charGen(len : number): string {
         const tokenChars = "1234567890QWERTYUIOPLKJHGFDDSAQWEZXCVBNM";
         var res = '';
         for(var i = 0; i < len; i++) {
