@@ -2,13 +2,13 @@ import { Client, GatewayIntentBits, EmbedBuilder, ActivityType, Message } from '
 import { webTokens } from '../db/entities/hover.webTokens';
 import { AppDataSource } from '../db/data-source';
 import apiMethods from '../api/hover.api';
+import conf from './discord.conf';
 
 const api = new apiMethods();
 const client = new Client({ intents: [GatewayIntentBits.DirectMessages, GatewayIntentBits.Guilds, GatewayIntentBits.GuildBans, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent,] });
-const prefix = '=';
-const botCmdChannel = '1129540425544376320';
+const prefix = conf.prefix;
 
-client.login('MTEyODg0MTc2Nzc1Njc1OTA4MA.Gj8-Ek.qP8AhlubB3Ib8BOXSFx2PoafnkIec_VNyl9Fpo');
+client.login(conf.token);
 
 client.on('ready', async() => {
     client.user.setPresence({
@@ -19,7 +19,7 @@ client.on('ready', async() => {
 
 client.on('messageCreate', async(message: Message<boolean>) => {
     if(!message.content.startsWith(prefix)) return;
-    if(message.channelId == botCmdChannel) {
+    if(conf.botCommandChannels.indexOf(message.channelId) != -1) {
         const args : string[] = message.content.slice(prefix.length).trim().split(' ');
 
         if(message.content.startsWith(`${prefix}stats`)) {
