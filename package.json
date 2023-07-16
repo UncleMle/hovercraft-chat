@@ -1,26 +1,39 @@
 {
-  "name": "hovercraft-main",
-  "version": "1.0.0",
-  "description": "Hovercraft web app",
-  "main": "router.js",
-  "scripts": {
-    "devstart": "node core.js"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
-    "discord.js": "^14.11.0",
-    "express": "^4.18.2",
-    "express-rate-limit": "^6.7.1",
-    "fs": "^0.0.1-security",
-    "jsonwebtoken": "^9.0.1",
-    "morgan": "^1.10.0",
-    "mysql2": "^3.5.1",
-    "path": "^0.12.7",
-    "process": "^0.11.10",
-    "sequelize": "^6.32.1",
-    "webscrape": "^3.0.0"
-  }
+   "name": "hovercraft-main",
+   "version": "1.0.0",
+   "description": "",
+   "main": "index.js",
+   "scripts": {
+      "build": "rimraf dist && npx tsc",
+      "start": "node ./build/hover.core.js",
+      "dev": "npx tsc -w & nodemon dist/hover.core.js",
+      "typeorm": "typeorm-ts-node-commonjs"
+   },
+   "keywords": [],
+   "author": "",
+   "license": "ISC",
+   "dependencies": {
+      "@types/body-parser": "^1.19.2",
+      "@types/cors": "^2.8.13",
+      "@types/express": "^4.17.17",
+      "@types/jsonwebtoken": "^9.0.2",
+      "@types/morgan": "^1.9.4",
+      "body-parser": "^1.20.2",
+      "cors": "^2.8.5",
+      "express": "^4.18.2",
+      "jsonwebtoken": "^9.0.1",
+      "morgan": "^1.10.0",
+      "nodemon": "^3.0.1",
+      "pg": "^8.4.0",
+      "reflect-metadata": "^0.1.13",
+      "rimraf": "^5.0.1",
+      "touch": "^3.1.0",
+      "typeorm": "0.3.17",
+      "typescript": "^5.1.6"
+   },
+   "devDependencies": {
+      "@types/node": "^16.11.10",
+      "ts-node": "10.7.0",
+      "typescript": "4.5.2"
+   }
 }
