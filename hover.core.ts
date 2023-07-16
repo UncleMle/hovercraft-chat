@@ -3,6 +3,7 @@ import apiMethods from './api/hover.api';
 import cors from 'cors';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
+import routes from './hover.routes';
 
 const api = new apiMethods();
 
@@ -16,12 +17,6 @@ app.use(bodyParser.json());
 app.listen(port, () => {
     api.Log(`App is now listening on port ${port}`);
 });
-
-import hoverAuth from './endpoints/hover.auth';
-
-let routes: object[] = [
-    { path: '/auth', location: hoverAuth }
-]
 
 routes.forEach((route : any) => {
     app.use(route.path, route.location)

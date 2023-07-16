@@ -8,6 +8,7 @@ const hover_api_1 = __importDefault(require("./api/hover.api"));
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const hover_routes_1 = __importDefault(require("./hover.routes"));
 const api = new hover_api_1.default();
 const app = (0, express_1.default)();
 const port = 8081;
@@ -17,11 +18,7 @@ app.use(body_parser_1.default.json());
 app.listen(port, () => {
     api.Log(`App is now listening on port ${port}`);
 });
-const hover_auth_1 = __importDefault(require("./endpoints/hover.auth"));
-let routes = [
-    { path: '/auth', location: hover_auth_1.default }
-];
-routes.forEach((route) => {
+hover_routes_1.default.forEach((route) => {
     app.use(route.path, route.location);
 });
-api.Log(`All ${routes.length} routes were loaded.`);
+api.Log(`All ${hover_routes_1.default.length} routes were loaded.`);
