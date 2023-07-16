@@ -7,15 +7,9 @@ export class webTokens extends BaseEntity {
     id: number
 
     @Column()
-    firstName: string
+    token: string
 
     @Column()
-    lastName: string
-
-    @Column()
-    username: string
-
-    @Column()
-    password: string
+    timeCreated: number
 
 }

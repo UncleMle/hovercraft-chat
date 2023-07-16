@@ -21,18 +21,18 @@ app.use(bodyParser.json());
 
 AppDataSource.initialize().then(async () => {
 
+    /* TypeORM init
     console.log("Inserting a new user into the database...")
     const webToken = new webTokens();
-    webToken.firstName = 'Helo';
-    webToken.lastName = 'Bye bye';
-    webToken.username = 'UncleMole';
-    webToken.password = '1245123ss';
+    webToken.token = 'Helo';
+    webToken.timeCreated = api.getUnix();
     await AppDataSource.manager.save(webToken);
     console.log("Saved a new user with id: " + webToken.id);
 
     console.log("Loading users from the database...");
     const tokens = await AppDataSource.manager.find(webTokens);
     console.log("Loaded tokens: ", tokens);
+    */
 
 }).catch(error => console.log(error))
 
@@ -40,9 +40,5 @@ AppDataSource.initialize().then(async () => {
 app.listen(port, (): void => {
     api.Log(`App is now listening on port ${port}`);
 });
-
-routes.forEach((route : any) => {
-    app.use(route.path, route.location)
-})
 
 api.Log(`All ${routes.length} routes were loaded.`);
