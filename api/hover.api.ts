@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import consoleLog from '../discord/hover.discord';
 
 class apiMethods {
 

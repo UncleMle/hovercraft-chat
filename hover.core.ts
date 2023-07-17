@@ -8,6 +8,8 @@ import routes from './hover.routes';
 import 'reflect-metadata';
 
 import dc from './discord/hover.discord';
+import { AppDataSource } from './db/data-source';
+import { webTokens } from './db/entities/hover.webTokens';
 
 const api = new apiMethods();
 
@@ -18,7 +20,6 @@ app.use(cors());
 app.use(morgan('combined'));
 app.use(bodyParser.json());
 
-
 app.listen(port, (): void => {
     api.Log(`App is now listening on port ${port}`);
 });
@@ -26,3 +27,32 @@ app.listen(port, (): void => {
 api.Log(`All ${routes.length} routes were loaded.`);
 
 dc?api.Log('Discord intergration now running'):"";
+
+
+setTimeout(() => {
+    async function main() {
+
+        /*
+        const tokenRepo = AppDataSource.getRepository(webTokens);
+
+        const tok = await tokenRepo.findOne({ where: { token: 'Helo asd asd ', timeCreated: 1689525965 } });
+
+        console.log(tok ? 0 : 1);
+        */
+
+        /*
+        await tokenRepo.update(2, {
+            token: 'Asd aisdk asdk asopd kasd ',
+            timeCreated: api.getUnix()
+        });
+        */
+
+        /**const allRecords = await tokenRepo.find();
+
+        console.log(allRecords); */
+
+    }
+
+    main();
+}, 2000);
+

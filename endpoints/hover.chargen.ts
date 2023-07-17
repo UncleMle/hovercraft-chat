@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import apiMethods from '../api/hover.api';
 import { webTokens } from '../db/entities/hover.webTokens';
 import { AppDataSource } from '../db/data-source';
+import { EntityManager } from 'typeorm';
 
 const router = express.Router();
 const api = new apiMethods();
@@ -24,9 +25,6 @@ async function sessionGeneration(tokenStatus : Boolean, res: Response) {
         }
         case true:
         {
-            AppDataSource.initialize().then(async () => {
-
-            })
         }
         default: break;
     }
