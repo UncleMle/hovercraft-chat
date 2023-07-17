@@ -20,7 +20,6 @@ app.use(cors());
 app.use(morgan('combined'));
 app.use(bodyParser.json());
 
-
 app.listen(port, (): void => {
     api.Log(`App is now listening on port ${port}`);
 });
@@ -35,9 +34,21 @@ setTimeout(() => {
 
         const tokenRepo = AppDataSource.getRepository(webTokens);
 
-        const allRecords = await tokenRepo.find();
+        const tok = await tokenRepo.find({ where: { token: 'Helo asd asd ', timeCreated: 1689525965 } });
 
-        console.log(allRecords);
+        console.log(tok.length);
+
+        /*
+        await tokenRepo.update(2, {
+            token: 'Asd aisdk asdk asopd kasd ',
+            timeCreated: api.getUnix()
+        });
+        */
+
+        /**const allRecords = await tokenRepo.find();
+
+        console.log(allRecords); */
+
     }
 
     main();
