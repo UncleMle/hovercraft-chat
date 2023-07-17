@@ -32,11 +32,13 @@ dc?api.Log('Discord intergration now running'):"";
 setTimeout(() => {
     async function main() {
 
+        /*
         const tokenRepo = AppDataSource.getRepository(webTokens);
 
-        const tok = await tokenRepo.find({ where: { token: 'Helo asd asd ', timeCreated: 1689525965 } });
+        const tok = await tokenRepo.findOne({ where: { token: 'Helo asd asd ', timeCreated: 1689525965 } });
 
-        console.log(tok.length);
+        console.log(tok ? 0 : 1);
+        */
 
         /*
         await tokenRepo.update(2, {
