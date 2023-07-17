@@ -8,6 +8,8 @@ import routes from './hover.routes';
 import 'reflect-metadata';
 
 import dc from './discord/hover.discord';
+import { AppDataSource } from './db/data-source';
+import { webTokens } from './db/entities/hover.webTokens';
 
 const api = new apiMethods();
 
@@ -26,3 +28,18 @@ app.listen(port, (): void => {
 api.Log(`All ${routes.length} routes were loaded.`);
 
 dc?api.Log('Discord intergration now running'):"";
+
+
+setTimeout(() => {
+    async function main() {
+
+        const tokenRepo = AppDataSource.getRepository(webTokens);
+
+        const allRecords = await tokenRepo.find();
+
+        console.log(allRecords);
+    }
+
+    main();
+}, 2000);
+

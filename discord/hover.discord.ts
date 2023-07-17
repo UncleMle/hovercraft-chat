@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, EmbedBuilder, ActivityType, Message, Channel, TextChannel } from 'discord.js';
+import { Client, GatewayIntentBits, EmbedBuilder, ActivityType, Message, Channel, TextChannel, escapeMarkdown } from 'discord.js';
 import apiMethods from '../api/hover.api';
 import conf from './discord.conf';
 import commandsList from './discord.cmdList';
@@ -24,8 +24,10 @@ client.on('ready', async() => {
 
         channel.messages.fetch(conf.statMsgId)
         .then(async(message) => {
-            AppDataSource.initialize().then(async() => {
-                const tokens = await AppDataSource.manager.find(webTokens);
+                const tokenRepo = AppDataSource.getRepository(webTokens);
+
+                const allRecords = await tokenRepo.find();
+
                 const serviceStats = new EmbedBuilder()
                 .setColor(0x043667)
                 .setTitle('Service Statisics')
@@ -34,13 +36,12 @@ client.on('ready', async() => {
                     { name: 'Endpoint total', value: `${routes.length}`, inline: true },
                     { name: 'Uptime', value: `100.00%`, inline: true },
                     { name: 'Domain', value: `https://hovercraft.chat`, inline: true },
-                    { name: 'Total Requests', value: `${tokens.length}`, inline: true },
+                    { name: 'Total Requests', value: `${allRecords.length}`, inline: true },
                     { name: 'Total Chat Sessions', value: `0`, inline: true },
                     { name: 'Total Accounts registered', value: `0`, inline: true }
                 )
                 .setTimestamp()
                 message.edit({ embeds: [serviceStats] });
-            })
         })
         .catch(console.error);
 
@@ -58,5 +59,8 @@ client.on('messageCreate', async(message: Message<boolean>) => {
     }
 });
 
-
-export default true;
+export default function consoleLog(message: any) {
+    //if(!client.isReady()) return api.Log(message);
+    const channel = client.channels.cache.get('1128890846981410837') as TextChannel;
+    channel.send(message);
+}

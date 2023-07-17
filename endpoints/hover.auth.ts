@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 const api = new apiMethods();
 const router = express.Router();
 
+
 export default router.get('/', (req : Request, res: Response) => {
     const token = jwt.sign({}, "jwtPrivateKey", { expiresIn: "60m" });
 
