@@ -10,6 +10,9 @@ export class webTokens extends BaseEntity {
     token: string
 
     @Column()
+    sessionId: number
+
+    @Column()
     timeCreated: number
 
 }

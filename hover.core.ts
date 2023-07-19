@@ -10,23 +10,70 @@ import 'reflect-metadata';
 import dc from './discord/hover.discord';
 import { AppDataSource } from './db/data-source';
 import { webTokens } from './db/entities/hover.webTokens';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 
 const api = new apiMethods();
 
 const app : Express = express();
 const port : number = 8081;
+const httpServer = createServer(app);
+const io : Server = new Server(httpServer, { cors: { origin: 'http://localhost:8080' } });
 
 app.use(cors());
 app.use(morgan('combined'));
 app.use(bodyParser.json());
 
+io.on('connection', (socket) => {
+    console.log('New socket has been created with id of '+socket.id);
+
+    socket.on('send-message', (message: string) => {
+        socket.broadcast.emit('recieve-message', message);
+        console.log(message);
+    })
+})
+
+httpServer.listen(3000);
+
+/*
 app.listen(port, (): void => {
     api.Log(`App is now listening on port ${port}`);
 });
+*/
 
 api.Log(`All ${routes.length} routes were loaded.`);
 
 dc?api.Log('Discord intergration now running'):"";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 setTimeout(() => {

@@ -1,9 +1,9 @@
 import hoverAuth from './endpoints/hover.auth';
-import hoverCharGen from './endpoints/hover.chargen';
+import hoverCharGen from './endpoints/hover.sessionGen';
 
 let routes: object[] = [
     { path: '/auth', location: hoverAuth },
-    { path: '/chargen', location: hoverCharGen }
+    { path: '/sessiongen', location: hoverCharGen }
 ]
 
 export default routes;

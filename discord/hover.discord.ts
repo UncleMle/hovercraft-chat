@@ -9,7 +9,7 @@ import routes from '../hover.routes';
 
 const cmds = new commands();
 const api = new apiMethods();
-const client = new Client({ intents: [GatewayIntentBits.DirectMessages, GatewayIntentBits.Guilds, GatewayIntentBits.GuildBans, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent,] });
+const client = new Client({ intents: [GatewayIntentBits.DirectMessages, GatewayIntentBits.Guilds, GatewayIntentBits.GuildBans, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
 client.login(conf.token);
 
@@ -60,7 +60,6 @@ client.on('messageCreate', async(message: Message<boolean>) => {
 });
 
 export default function consoleLog(message: any) {
-    //if(!client.isReady()) return api.Log(message);
     const channel = client.channels.cache.get('1128890846981410837') as TextChannel;
     channel.send(message);
 }
