@@ -1,16 +1,18 @@
 import express, { Express, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import consoleLog from '../discord/hover.discord';
+import { color, log, red, green, cyan, cyanBright, gray } from 'console-log-colors';
+import { AppDataSource } from '../db/data-source';
 
 class apiMethods {
 
-    Log(text : any): void {
-        console.log(`${this.srvTime()} | ${text}`);
+    async Log(text : any) {
+        console.log(gray(`${this.srvTime()}`), green(`| ${text}`));
     }
 
     srvTime(): string {
         var date = new Date();
-        return `${date.getHours() < 10 ? "0"+date.getHours() : date.getHours()}:${date.getMinutes() < 10 ? "0"+date.getMinutes() : date.getMinutes()}:${date.getSeconds() < 10 ? "0"+date.getSeconds() : date.getSeconds()}`;
+        return `[${date.getFullYear()}/${date.getMonth() < 10 ? "0"+date.getMonth() : date.getMonth()}/${date.getDay() < 10 ? "0"+date.getDay() : date.getDay()}] [${date.getHours() < 10 ? "0"+date.getHours() : date.getHours()}:${date.getMinutes() < 10 ? "0"+date.getMinutes() : date.getMinutes()}:${date.getSeconds() < 10 ? "0"+date.getSeconds() : date.getSeconds()}]`;
     }
 
     getUnix(): number {

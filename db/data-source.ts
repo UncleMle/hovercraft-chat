@@ -1,7 +1,9 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { webTokens } from "./entities/hover.webTokens";
 import apiMethods from '../api/hover.api';
+
+import { webTokens } from "./entities/hover.webTokens";
+import { logs } from "./entities/hover.logs";
 
 const api = new apiMethods();
 export const AppDataSource = new DataSource({
@@ -13,7 +15,10 @@ export const AppDataSource = new DataSource({
     database: "hovercraft.chat",
     synchronize: true,
     logging: false,
-    entities: [webTokens],
+    entities: [
+        webTokens,
+        logs
+    ],
     migrations: [],
     subscribers: [],
 })

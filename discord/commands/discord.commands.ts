@@ -7,10 +7,6 @@ import { Channel, TextChannel, Client } from 'discord.js';
 export default class cmd {
 
     async stats(message: Message<boolean>) {
-
-        /**
-         *  {\typeorm\data-source\DataSource.js:131} Remove error throw on init
-         */
         const tokenRepo = AppDataSource.getRepository(webTokens);
 
         const allRecords = await tokenRepo.find();
@@ -24,7 +20,6 @@ export default class cmd {
         )
         .setTimestamp()
         message.channel.send({ embeds: [help] });
-
     }
 
     help(message: Message<boolean>): void {
@@ -39,5 +34,7 @@ export default class cmd {
         .setTimestamp()
         message.channel.send({ embeds: [help] });
     }
+
+
 }
 

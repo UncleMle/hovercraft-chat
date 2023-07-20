@@ -12,6 +12,7 @@ import { AppDataSource } from './db/data-source';
 import { webTokens } from './db/entities/hover.webTokens';
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
+import socketEvents from './hover.socketEvents';
 
 const api = new apiMethods();
 
@@ -23,26 +24,6 @@ const io : Server = new Server(httpServer, { cors: { origin: 'http://localhost:8
 app.use(cors());
 app.use(morgan('combined'));
 app.use(bodyParser.json());
-
-io.on('connection', (socket : Socket) => {
-    console.log('New socket has been created with id of '+socket.id);
-
-    socket.on('send-message', (message: string, roomId: string): void => {
-        console.log(`Socket Creds from `+ message, roomId);
-        if(!roomId || !message) return;
-        socket.to(roomId).emit('recieve-message', message);
-    })
-
-    socket.on('join-room', (roomId: string) => {
-        if(roomId) {
-            const tokenRepo = AppDataSource.getRepository(webTokens);
-
-            tokenRepo.find({ where: { sessionId: roomId } }).then(res => {
-                if(res.length > 0) { socket.join(roomId) }
-            })
-        }
-    })
-})
 
 httpServer.listen(3000);
 
