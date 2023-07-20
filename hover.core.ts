@@ -11,7 +11,7 @@ import dc from './discord/hover.discord';
 import { AppDataSource } from './db/data-source';
 import { webTokens } from './db/entities/hover.webTokens';
 import { createServer } from 'http';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 
 const api = new apiMethods();
 
@@ -24,28 +24,41 @@ app.use(cors());
 app.use(morgan('combined'));
 app.use(bodyParser.json());
 
-io.on('connection', (socket) => {
+io.on('connection', (socket : Socket) => {
     console.log('New socket has been created with id of '+socket.id);
 
-    socket.on('send-message', (message: string) => {
-        socket.broadcast.emit('recieve-message', message);
-        console.log(message);
+    socket.on('send-message', (message: string, roomId: string): void => {
+        console.log(`Socket Creds from `+ message, roomId);
+        if(!roomId || !message) return;
+        socket.to(roomId).emit('recieve-message', message);
+    })
+
+    socket.on('join-room', (roomId: string) => {
+        if(roomId) {
+            const tokenRepo = AppDataSource.getRepository(webTokens);
+
+            tokenRepo.find({ where: { sessionId: roomId } }).then(res => {
+                if(res.length > 0) { socket.join(roomId) }
+            })
+        }
     })
 })
 
 httpServer.listen(3000);
 
-/*
 app.listen(port, (): void => {
     api.Log(`App is now listening on port ${port}`);
 });
-*/
+
+routes.forEach((route : any) => {
+    app.use(route.path, route.location);
+})
 
 api.Log(`All ${routes.length} routes were loaded.`);
 
 dc?api.Log('Discord intergration now running'):"";
 
-
+export default io;
 
 
 

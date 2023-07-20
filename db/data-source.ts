@@ -20,4 +20,8 @@ export const AppDataSource = new DataSource({
 
 AppDataSource.initialize().then(() => {
     api.Log(`Data Source has been initialized`);
+
+    const tokenRepo = AppDataSource.getRepository(webTokens);
+
+    tokenRepo.clear().then(() => api.Log('Flushed old web tokens'));
 }).catch(err => {api.Log(err)})
