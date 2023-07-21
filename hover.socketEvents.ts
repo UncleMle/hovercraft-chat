@@ -13,18 +13,22 @@ io.on('connection', (socket: Socket): void => {
     api.Log('New socket has been created with id of '+socket.id);
 
     socket.on('send-message', (message: string, roomId: string): void => {
-        api.Log(`Socket Creds from `+ message, roomId);
+        api.Log(`Socket Creds from `+ message+ roomId);
         if(!roomId || !message) return;
         socket.to(roomId).emit('recieve-message', message);
     })
 
     socket.on('join-room', (roomId: string): void => {
         if(roomId) {
+            api.Log(`Room with ID ${roomId} was joined`);
+            socket.join(roomId);
+            /*
             const tokenRepo = AppDataSource.getRepository(webTokens);
 
             tokenRepo.find({ where: { sessionId: roomId } }).then(res => {
                 if(res.length > 0) { socket.join(roomId) }
             })
+            */
         }
     })
 
