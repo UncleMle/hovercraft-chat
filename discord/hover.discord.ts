@@ -6,6 +6,7 @@ import commands from './commands/discord.commands';
 import { AppDataSource } from '../db/data-source';
 import { webTokens } from '../db/entities/hover.webTokens';
 import routes from '../hover.routes';
+import { Accounts } from '../db/entities/hover.accounts';
 
 const cmds = new commands();
 const api = new apiMethods();
@@ -25,8 +26,10 @@ client.on('ready', async() => {
         channel.messages.fetch(conf.statMsgId)
         .then(async(message) => {
                 const tokenRepo = AppDataSource.getRepository(webTokens);
+                const accRepo = AppDataSource.getRepository(Accounts);
 
                 const allRecords = await tokenRepo.find();
+                const allAccounts = await accRepo.find();
 
                 const serviceStats = new EmbedBuilder()
                 .setColor(0x043667)
@@ -38,7 +41,7 @@ client.on('ready', async() => {
                     { name: 'Domain', value: `https://hovercraft.chat`, inline: true },
                     { name: 'Total Requests', value: `0`, inline: true },
                     { name: 'Total Current Chat Sessions', value: `${allRecords.length}`, inline: true },
-                    { name: 'Total Accounts registered', value: `0`, inline: true }
+                    { name: 'Total Accounts registered', value: `${allAccounts.length}`, inline: true }
                 )
                 .setTimestamp()
                 message.edit({ embeds: [serviceStats] });

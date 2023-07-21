@@ -41,10 +41,10 @@ export default router.get('/', limiter, async(req: Request, res: Response) => {
             account.discordAuth = 'None';
 
             accRepo.save(account).then(acc => {
-                api.Log(`A new account was created with [SQLID: ${acc.id}, username: ${acc.username}]`)
+                api.Log(`A new account was created with [SQLID: ${acc.UUID}, username: ${acc.username}]`)
                 res.status(200).send({
                     status: true,
-                    data: `A new account was created with [SQLID: ${acc.id}, username: ${acc.username}]`
+                    data: `A new account was created with [SQLID: ${acc.UUID}, username: ${acc.username}]`
                 });
             });
 

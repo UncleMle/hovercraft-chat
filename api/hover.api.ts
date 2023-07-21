@@ -42,6 +42,14 @@ class apiMethods {
         return tok? tok : false;
     }
 
+    formatUnixTimestamp (unixTimestamp) {
+        const date = new Date(unixTimestamp * 1000)
+        const hours = date.getHours()
+        const minutes = date.getMinutes()
+        const seconds = date.getSeconds()
+        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
+    }
+
     errHandle(handle : string, res : Response) {
         switch(handle) {
             case 'auth':
