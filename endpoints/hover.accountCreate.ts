@@ -6,6 +6,7 @@ import { Accounts } from '../db/entities/hover.accounts';
 import { AppDataSource } from '../db/data-source';
 import { _SHARED } from '../shared/hover.constants';
 import rateLimit, { RateLimitRequestHandler } from 'express-rate-limit';
+import { PrimaryGeneratedColumn } from 'typeorm';
 
 const api : apiMethods = new apiMethods();
 const router: Router = express.Router();
