@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import apiMethods from '../api/hover.api';
 import bcrypt from 'bcrypt';
-import { accounts } from '../db/entities/hover.accounts';
+import { Accounts } from '../db/entities/hover.accounts';
 import { AppDataSource } from '../db/data-source';
 
 const router = express.Router();
@@ -22,7 +22,7 @@ export default router.get('/', async(req: Request, res: Response) => {
 })
 
 async function getAccount(username: string, password: string, res: Response) {
-    const accRepo = AppDataSource.getRepository(accounts);
+    const accRepo = AppDataSource.getRepository(Accounts);
 
     accRepo.findOne({ where: { username: username } }).then(async(findAcc) => {
         if(findAcc) {

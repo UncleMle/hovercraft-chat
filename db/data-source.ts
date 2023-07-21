@@ -4,7 +4,7 @@ import apiMethods from '../api/hover.api';
 
 import { webTokens } from "./entities/hover.webTokens";
 import { logs } from "./entities/hover.logs";
-import { accounts } from "./entities/hover.accounts";
+import { Accounts } from "./entities/hover.accounts";
 
 const api = new apiMethods();
 export const AppDataSource = new DataSource({
@@ -19,7 +19,7 @@ export const AppDataSource = new DataSource({
     entities: [
         webTokens,
         logs,
-        accounts
+        Accounts
     ],
     migrations: [],
     subscribers: [],
@@ -32,9 +32,9 @@ AppDataSource.initialize().then(() => {
 
     tokenRepo.clear().then(() => api.Log('Flushed old web tokens'));
 
-    const accRepo = AppDataSource.getRepository(accounts);
+    const accRepo = AppDataSource.getRepository(Accounts);
 
-    const newAcc: accounts = new accounts();
+    const newAcc: Accounts = new Accounts();
     newAcc.username = 'UncleMole';
     newAcc.password = '$2y$10$K8AKWTug4HLH.JMmNguek.PdcNz/1d/ugCdcb/1sc9VIYg7xlzfgG';
     newAcc.discordAuth = 'None';
