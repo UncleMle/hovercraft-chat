@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from 'express';
+import { IncomingHttpHeaders } from 'http';
 import jwt from 'jsonwebtoken';
 import consoleLog from '../discord/hover.discord';
 import { color, log, red, green, cyan, cyanBright, gray } from 'console-log-colors';
@@ -17,6 +18,18 @@ class apiMethods {
 
     getUnix(): number {
         return Math.round(Date.now() / 1000);
+    }
+
+    async checkAccProps(header: IncomingHttpHeaders, exceptPropsItems: string[]): Promise<Boolean> {
+        let exceptProps: string[] = exceptPropsItems;
+        let head = Object.entries(header);
+
+        let foundItems: number[] = [];
+        for(const [key, val] of head) {
+            if(exceptProps.indexOf(key) != -1) { foundItems.push(1) };
+        }
+
+        return foundItems.length > 2 ? true : false;
     }
 
     errHandle(handle : string, res : Response) {
