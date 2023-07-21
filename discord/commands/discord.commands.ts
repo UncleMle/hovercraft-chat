@@ -46,11 +46,14 @@ export default class cmd {
     }
 
     async accinfo(message: Message<boolean>, args: string[]) {
-        if(!args[1]) { return missingParam(message, 'accinfo', ['sqlid']) };
+        if(!await errApi.checkAuth(message, conf.developerRoles)) return;
+
+        if(!args[1]) { return errApi.missingParam(message, 'accinfo', ['sqlid']) };
+
         const accRepo = AppDataSource.getRepository(Accounts);
 
         accRepo.findOne({ where: { id: parseInt(args[1]) } }).then(account => {
-            if(!account) return errEmbed(message, 'accinfo', 'No account was found with SQLID ``'+args[1]+'``');
+            if(!account) return errApi.errEmbed(message, 'accinfo', 'No account was found with SQLID ``'+args[1]+'``');
             const accountInfo: EmbedBuilder = new EmbedBuilder()
             .setColor(0x043667)
             .setTitle(`**Hovercraft.chat | Account Info**`)
@@ -62,26 +65,51 @@ export default class cmd {
             .setTimestamp()
             message.channel.send({ embeds: [accountInfo] });
         });
-
     }
 
 }
 
-function missingParam(message: Message<boolean>, commandName: string, missingParams: string[]) {
-    const resEmbed: EmbedBuilder = new EmbedBuilder()
-    .setColor(0x043667)
-    .setTitle(`**${conf.prefix}${commandName}**`)
-    .setDescription(`Missing parameter ***${missingParams.join(' ')}***`)
-    .setTimestamp();
-    message.channel.send({ embeds: [resEmbed] });
+class embedHandles {
+
+    missingParam(message: Message<boolean>, commandName: string, missingParams: string[]) {
+        const resEmbed: EmbedBuilder = new EmbedBuilder()
+        .setColor(0x043667)
+        .setTitle(`**${conf.prefix}${commandName}**`)
+        .setDescription(`Missing parameter ***${missingParams.join(' ')}***`)
+        .setTimestamp();
+        message.channel.send({ embeds: [resEmbed] });
+    }
+
+    errEmbed(message: Message<boolean>, commandName: string, errorName: string) {
+        const errEmbed: EmbedBuilder = new EmbedBuilder()
+        .setColor(0xf54242)
+        .setTitle(`**Hovercraft.chat | ${conf.prefix}${commandName}**`)
+        .setDescription(`${errorName}`)
+        .setTimestamp()
+        message.channel.send({ embeds: [errEmbed] });
+    }
+
+    noauth(message: Message<boolean>, commandName: string) {
+        const errEmbed: EmbedBuilder = new EmbedBuilder()
+        .setColor(0xf54242)
+        .setTitle(`**Hovercraft.chat | ${conf.prefix}${commandName}**`)
+        .setDescription(`You do not have authorization to access this resource`)
+        .setTimestamp()
+        message.channel.send({ embeds: [errEmbed] });
+    }
+
+    async checkAuth(message: Message<boolean>, roles: string[]) {
+        let hasAuth: Boolean = false;
+
+        message.member.roles.cache.some(role => {
+            if(conf.developerRoles.indexOf(role.name) != -1) {
+                hasAuth = true;
+            }
+        });
+
+        return hasAuth;
+    }
+
 }
 
-function errEmbed(message: Message<boolean>, commandName: string, errorName: string) {
-    const errEmbed: EmbedBuilder = new EmbedBuilder()
-    .setColor(0xf54242)
-    .setTitle(`**Hovercraft.chat | ${conf.prefix}${commandName}**`)
-    .setDescription(`${errorName}`)
-    .setTimestamp()
-    message.channel.send({ embeds: [errEmbed] });
-}
-
+const errApi = new embedHandles();

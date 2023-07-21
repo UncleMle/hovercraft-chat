@@ -6,14 +6,13 @@ import { Accounts } from '../db/entities/hover.accounts';
 import { AppDataSource } from '../db/data-source';
 import { _SHARED } from '../shared/hover.constants';
 import rateLimit, { RateLimitRequestHandler } from 'express-rate-limit';
-import { PrimaryGeneratedColumn } from 'typeorm';
 
 const api : apiMethods = new apiMethods();
 const router: Router = express.Router();
 
 const limiter: RateLimitRequestHandler = rateLimit({
 	windowMs: 15 * 60 * 1000,
-	max: 2,
+	max: 30000,
     message: 'Too many accounts created from this IP, please try again later',
 	standardHeaders: true,
 	legacyHeaders: false,
@@ -22,7 +21,7 @@ const limiter: RateLimitRequestHandler = rateLimit({
 export default router.get('/', limiter, async(req: Request, res: Response) => {
     const headers: IncomingHttpHeaders = req.headers;
     const headerCheck: Boolean = await api.checkAccProps(headers, ['x-auth-token', 'x-auth-user', 'x-auth-pass']);
-    const tokenAuth = headerCheck? api.authToken(req.header('x-auth-token')): "";
+    const tokenAuth = headerCheck? await api.authToken(req.header('x-auth-token')): "";
 
     if(headerCheck && tokenAuth) {
 
