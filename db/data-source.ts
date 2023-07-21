@@ -4,6 +4,7 @@ import apiMethods from '../api/hover.api';
 
 import { webTokens } from "./entities/hover.webTokens";
 import { logs } from "./entities/hover.logs";
+import { accounts } from "./entities/hover.accounts";
 
 const api = new apiMethods();
 export const AppDataSource = new DataSource({
@@ -17,7 +18,8 @@ export const AppDataSource = new DataSource({
     logging: false,
     entities: [
         webTokens,
-        logs
+        logs,
+        accounts
     ],
     migrations: [],
     subscribers: [],
