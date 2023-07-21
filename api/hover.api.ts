@@ -22,7 +22,7 @@ class apiMethods {
 
     async checkAccProps(header: IncomingHttpHeaders, exceptPropsItems: string[]): Promise<Boolean> {
         let exceptProps: string[] = exceptPropsItems;
-        let head = Object.entries(header);
+        let head: [string, string | string[]][] = Object.entries(header);
 
         let foundItems: number[] = [];
         for(const [key, val] of head) {
@@ -30,6 +30,16 @@ class apiMethods {
         }
 
         return foundItems.length > 2 ? true : false;
+    }
+
+    async getHeaderItem(header: IncomingHttpHeaders, item: string): Promise<string | false | string[]> {
+        let headerObj: [string, string | string[]][] = Object.entries(header);
+
+        let tok: string | string[];
+
+        headerObj.find((obj, idx) => obj[idx] === item ? tok=obj[1] : "");
+
+        return tok? tok : false;
     }
 
     errHandle(handle : string, res : Response) {

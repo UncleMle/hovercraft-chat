@@ -7,19 +7,15 @@ const router = express.Router();
 
 export default router.get('/', async(req: Request, res: Response) => {
     const headers: IncomingHttpHeaders = req.headers;
-    const headerCheck = await checkAccProps(headers);
-    api.Log(headerCheck);
+    const headerCheck: Boolean = await api.checkAccProps(headers, ['x-auth-token', 'x-auth-user', 'x-auth-pass']);
+    if(headerCheck) {
+        let headerObj: [string, string | string[]][] = Object.entries(headers);
+
+        let tok: string | string[];
+
+        headerObj.find((obj, idx) => obj[idx] === 'x-auth-token' ? tok=obj[1] : "");
+
+        tok? api.Log('Token: '+tok) : "";
+
+    } else return api.errHandle('param', res);
 });
-
-async function checkAccProps(header: IncomingHttpHeaders): Promise<Boolean> {
-    let except: Boolean = false;
-    let exceptProps: string[] = ['x-auth-token', 'x-auth-user', 'x-auth-pass'];
-    let head = Object.entries(header);
-
-    let foundItems: number[] = [];
-    for(const [key, val] of head) {
-        if(exceptProps.indexOf(key) != -1) { foundItems.push(1) };
-    }
-
-    return foundItems.length > 2 ? true : false;
-}
