@@ -1,3 +1,4 @@
+/*
 import express from 'express';
 import apiMethods from '../api/hover.api';
 import socketApp from '../hover.core';
@@ -20,3 +21,6 @@ export default router.get('/', async(req, res) => {
         } else return api.errHandle('auth', res);
     } else return api.errHandle('param', res);
 })
+*/
+
+export default true;

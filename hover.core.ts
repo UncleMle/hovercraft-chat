@@ -8,24 +8,17 @@ import routes from './hover.routes';
 import 'reflect-metadata';
 
 import dc from './discord/hover.discord';
-import { AppDataSource } from './db/data-source';
-import { webTokens } from './db/entities/hover.webTokens';
-import { createServer } from 'http';
-import { Server, Socket } from 'socket.io';
 import socketEvents from './hover.socketEvents';
 
 const api = new apiMethods();
 
 const app : Express = express();
 const port : number = 8081;
-const httpServer = createServer(app);
-const io : Server = new Server(httpServer, { cors: { origin: 'http://localhost:8080' } });
 
 app.use(cors());
 app.use(morgan('combined'));
 app.use(bodyParser.json());
 
-httpServer.listen(3000);
 
 app.listen(port, (): void => {
     api.Log(`App is now listening on port ${port}`);
@@ -38,8 +31,9 @@ routes.forEach((route : any) => {
 api.Log(`All ${routes.length} routes were loaded.`);
 
 dc?api.Log('Discord intergration now running'):"";
+socketEvents?api.Log('Socket events loaded'):"";
 
-export default io;
+export default app;
 
 
 

@@ -1,22 +1,24 @@
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { AppDataSource } from './db/data-source';
 import { webTokens } from './db/entities/hover.webTokens';
 import apiMethods from './api/hover.api';
+import { createServer } from 'http';
+import app from './hover.core';
 
-import io from './hover.core';
-
+const httpServer = createServer(app);
 const api = new apiMethods();
+const io : Server = new Server(httpServer, { cors: { origin: 'http://localhost:8080' } });
 
-io.on('connection', (socket: Socket) => {
+io.on('connection', (socket: Socket): void => {
     api.Log('New socket has been created with id of '+socket.id);
 
     socket.on('send-message', (message: string, roomId: string): void => {
-        console.log(`Socket Creds from `+ message, roomId);
+        api.Log(`Socket Creds from `+ message, roomId);
         if(!roomId || !message) return;
         socket.to(roomId).emit('recieve-message', message);
     })
 
-    socket.on('join-room', (roomId: string) => {
+    socket.on('join-room', (roomId: string): void => {
         if(roomId) {
             const tokenRepo = AppDataSource.getRepository(webTokens);
 
@@ -25,6 +27,9 @@ io.on('connection', (socket: Socket) => {
             })
         }
     })
+
 });
 
-export default io;
+httpServer.listen(3000);
+
+export default true;
