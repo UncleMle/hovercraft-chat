@@ -6,15 +6,17 @@ import { Accounts } from '../../db/entities/hover.accounts';
 import { Channel, TextChannel, Client } from 'discord.js';
 import apiMethods from '../../api/hover.api';
 import conf from '../discord.conf';
-import { UUID } from 'typeorm/driver/mongodb/bson.typings';
+import { Repository } from 'typeorm';
 
 const api = new apiMethods();
 
 export default class cmd {
 
-    async stats(message: Message<boolean>) {
+    async servicestats(message: Message<boolean>): Promise<void> {
+        if(!await cmdApi.checkAuth(message, conf.staffRoles)) return;
+
         const tokenRepo = AppDataSource.getRepository(webTokens);
-        const accRepo = AppDataSource.getRepository(Accounts);
+        const accRepo: Repository<Accounts> = AppDataSource.getRepository(Accounts);
 
         const allRecords = await tokenRepo.find();
         const allAccs = await accRepo.find();
@@ -37,23 +39,23 @@ export default class cmd {
         .setTitle(`**Hovercraft.chat | Help**`)
         .setDescription(`There are currently ***${cmdList.length}*** commands available`)
         .addFields(
-            { name: 'Perms: ``everyone`` | '+`${conf.prefix}help`, value: `view all available commands`, inline: true },
-            { name: 'Perms: ``everyone`` | '+`${conf.prefix}stats`, value: `View service statistics`, inline: true },
-            { name: 'Perms: ``Developer, Staff`` | '+`${conf.prefix}accinfo`, value: `View information about an account via UUID`, inline: true }
+            { name: 'Perms: ``Staff`` | '+`${conf.prefix}help`, value: `${cmdApi.getDesc('help')}`, inline: true },
+            { name: 'Perms: ``everyone`` | '+`${conf.prefix}stats`, value: `${cmdApi.getDesc('servicestats')}`, inline: true },
+            { name: 'Perms: ``Developer, Staff`` | '+`${conf.prefix}accinfo`, value: `${cmdApi.getDesc('accinfo')}`, inline: true }
         )
         .setTimestamp()
         message.channel.send({ embeds: [help] });
     }
 
-    async accinfo(message: Message<boolean>, args: string[]) {
-        if(!await errApi.checkAuth(message, conf.developerRoles)) return;
+    async accinfo(message: Message<boolean>, args: string[]): Promise<Message<boolean> | void> {
+        if(!await cmdApi.checkAuth(message, conf.developerRoles)) return;
 
-        if(!args[1]) { return errApi.missingParam(message, 'accinfo', ['sqlid']) };
+        if(!args[1]) { return cmdApi.missingParam(message, 'accinfo', ['sqlid']) };
 
-        const accRepo = AppDataSource.getRepository(Accounts);
+        const accRepo: Repository<Accounts> = AppDataSource.getRepository(Accounts);
 
         accRepo.findOne({ where: { id: parseInt(args[1]) } }).then(account => {
-            if(!account) return errApi.errEmbed(message, 'accinfo', 'No account was found with SQLID ``'+args[1]+'``');
+            if(!account) return cmdApi.errEmbed(message, 'accinfo', 'No account was found with SQLID ``'+args[1]+'``');
             const accountInfo: EmbedBuilder = new EmbedBuilder()
             .setColor(0x043667)
             .setTitle(`**Hovercraft.chat | Account Info**`)
@@ -71,7 +73,7 @@ export default class cmd {
 
 class embedHandles {
 
-    missingParam(message: Message<boolean>, commandName: string, missingParams: string[]) {
+    missingParam(message: Message<boolean>, commandName: string, missingParams: string[]): void {
         const resEmbed: EmbedBuilder = new EmbedBuilder()
         .setColor(0x043667)
         .setTitle(`**${conf.prefix}${commandName}**`)
@@ -80,7 +82,7 @@ class embedHandles {
         message.channel.send({ embeds: [resEmbed] });
     }
 
-    errEmbed(message: Message<boolean>, commandName: string, errorName: string) {
+    errEmbed(message: Message<boolean>, commandName: string, errorName: string): void {
         const errEmbed: EmbedBuilder = new EmbedBuilder()
         .setColor(0xf54242)
         .setTitle(`**Hovercraft.chat | ${conf.prefix}${commandName}**`)
@@ -89,7 +91,7 @@ class embedHandles {
         message.channel.send({ embeds: [errEmbed] });
     }
 
-    noauth(message: Message<boolean>, commandName: string) {
+    noauth(message: Message<boolean>, commandName: string): void {
         const errEmbed: EmbedBuilder = new EmbedBuilder()
         .setColor(0xf54242)
         .setTitle(`**Hovercraft.chat | ${conf.prefix}${commandName}**`)
@@ -98,11 +100,11 @@ class embedHandles {
         message.channel.send({ embeds: [errEmbed] });
     }
 
-    async checkAuth(message: Message<boolean>, roles: string[]) {
+    async checkAuth(message: Message<boolean>, roles: string[]): Promise<Boolean> {
         let hasAuth: Boolean = false;
 
         message.member.roles.cache.some(role => {
-            if(conf.developerRoles.indexOf(role.name) != -1) {
+            if(roles.indexOf(role.name) != -1) {
                 hasAuth = true;
             }
         });
@@ -110,6 +112,10 @@ class embedHandles {
         return hasAuth;
     }
 
+    getDesc(commandName: string): string[] {
+        return cmdList.map(x => x.commandName === commandName ? x.desc:(null));
+    }
+
 }
 
-const errApi = new embedHandles();
+const cmdApi = new embedHandles();
