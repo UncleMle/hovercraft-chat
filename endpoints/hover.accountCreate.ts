@@ -1,16 +1,24 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, Router } from 'express';
 import apiMethods from '../api/hover.api';
 import { IncomingHttpHeaders } from 'http';
 import bcrypt from 'bcrypt';
 import { Accounts } from '../db/entities/hover.accounts';
 import { AppDataSource } from '../db/data-source';
 import { _SHARED } from '../shared/hover.constants';
+import rateLimit, { RateLimitRequestHandler } from 'express-rate-limit';
 
-const api = new apiMethods();
-const router = express.Router();
-const saltRounds = 10;
+const api : apiMethods = new apiMethods();
+const router: Router = express.Router();
 
-export default router.get('/', async(req: Request, res: Response) => {
+const limiter: RateLimitRequestHandler = rateLimit({
+	windowMs: 15 * 60 * 1000,
+	max: 2,
+    message: 'Too many accounts created from this IP, please try again later',
+	standardHeaders: true,
+	legacyHeaders: false,
+});
+
+export default router.get('/', limiter, async(req: Request, res: Response) => {
     const headers: IncomingHttpHeaders = req.headers;
     const headerCheck: Boolean = await api.checkAccProps(headers, ['x-auth-token', 'x-auth-user', 'x-auth-pass']);
     const tokenAuth = headerCheck? api.authToken(req.header('x-auth-token')): "";
