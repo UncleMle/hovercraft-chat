@@ -26,7 +26,8 @@ async function getAccount(username: string, password: string, res: Response) {
 
     accRepo.findOne({ where: { username: username } }).then(async(findAcc) => {
         if(findAcc) {
-            let accAuth: Boolean = await bcrypt.compare(password, findAcc[0].password);
+            let accAuth: Boolean = await bcrypt.compare(password, findAcc.password);
+            console.log(accAuth);
             if(accAuth) {
                 res.status(300).send({
                     sqlid: findAcc.id,

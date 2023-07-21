@@ -31,4 +31,18 @@ AppDataSource.initialize().then(() => {
     const tokenRepo = AppDataSource.getRepository(webTokens);
 
     tokenRepo.clear().then(() => api.Log('Flushed old web tokens'));
+
+    const accRepo = AppDataSource.getRepository(accounts);
+
+    const newAcc: accounts = new accounts();
+    newAcc.username = 'UncleMole';
+    newAcc.password = '$2y$10$K8AKWTug4HLH.JMmNguek.PdcNz/1d/ugCdcb/1sc9VIYg7xlzfgG';
+    newAcc.discordAuth = 'None';
+    newAcc.createdTime = api.getUnix();
+    newAcc.lastActive = api.getUnix();
+    newAcc.ip = '127.0.0.1';
+    newAcc.banned = false;
+
+    accRepo.save(newAcc).then(acc => api.Log(`created new account with sqlid of ${acc.id}`));
+
 }).catch(err => {api.Log(err)})
