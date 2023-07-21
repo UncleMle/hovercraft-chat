@@ -36,8 +36,8 @@ client.on('ready', async() => {
                     { name: 'Endpoint total', value: `${routes.length}`, inline: true },
                     { name: 'Uptime', value: `100.00%`, inline: true },
                     { name: 'Domain', value: `https://hovercraft.chat`, inline: true },
-                    { name: 'Total Requests', value: `${allRecords.length}`, inline: true },
-                    { name: 'Total Chat Sessions', value: `0`, inline: true },
+                    { name: 'Total Requests', value: `0`, inline: true },
+                    { name: 'Total Current Chat Sessions', value: `${allRecords.length}`, inline: true },
                     { name: 'Total Accounts registered', value: `0`, inline: true }
                 )
                 .setTimestamp()

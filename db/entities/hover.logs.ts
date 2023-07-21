@@ -1,18 +1,14 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
 
 @Entity()
-export class webTokens extends BaseEntity {
+export class logs extends BaseEntity {
 
     @PrimaryGeneratedColumn()
     id: number
 
     @Column()
-    token: string
-
-    @Column()
-    sessionId: string
+    log: string
 
     @Column()
     timeCreated: number
-
 }

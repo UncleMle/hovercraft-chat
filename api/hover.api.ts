@@ -1,20 +1,45 @@
 import express, { Express, Request, Response } from 'express';
+import { IncomingHttpHeaders } from 'http';
 import jwt from 'jsonwebtoken';
 import consoleLog from '../discord/hover.discord';
+import { color, log, red, green, cyan, cyanBright, gray } from 'console-log-colors';
+import { AppDataSource } from '../db/data-source';
 
 class apiMethods {
 
-    Log(text : any): void {
-        console.log(`${this.srvTime()} | ${text}`);
+    async Log(text : any) {
+        console.log(gray(`${this.srvTime()}`), green(`| ${text}`));
     }
 
     srvTime(): string {
         var date = new Date();
-        return `${date.getHours() < 10 ? "0"+date.getHours() : date.getHours()}:${date.getMinutes() < 10 ? "0"+date.getMinutes() : date.getMinutes()}:${date.getSeconds() < 10 ? "0"+date.getSeconds() : date.getSeconds()}`;
+        return `[${date.getFullYear()}/${date.getMonth() < 10 ? "0"+date.getMonth() : date.getMonth()}/${date.getDay() < 10 ? "0"+date.getDay() : date.getDay()}] [${date.getHours() < 10 ? "0"+date.getHours() : date.getHours()}:${date.getMinutes() < 10 ? "0"+date.getMinutes() : date.getMinutes()}:${date.getSeconds() < 10 ? "0"+date.getSeconds() : date.getSeconds()}]`;
     }
 
     getUnix(): number {
         return Math.round(Date.now() / 1000);
+    }
+
+    async checkAccProps(header: IncomingHttpHeaders, exceptPropsItems: string[]): Promise<Boolean> {
+        let exceptProps: string[] = exceptPropsItems;
+        let head: [string, string | string[]][] = Object.entries(header);
+
+        let foundItems: number[] = [];
+        for(const [key, val] of head) {
+            if(exceptProps.indexOf(key) != -1) { foundItems.push(1) };
+        }
+
+        return foundItems.length > 2 ? true : false;
+    }
+
+    async getHeaderItem(header: IncomingHttpHeaders, item: string): Promise<string | false | string[]> {
+        let headerObj: [string, string | string[]][] = Object.entries(header);
+
+        let tok: string | string[];
+
+        headerObj.find((obj, idx) => obj[idx] === item ? tok=obj[1] : "");
+
+        return tok? tok : false;
     }
 
     errHandle(handle : string, res : Response) {

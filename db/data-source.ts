@@ -1,7 +1,10 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { webTokens } from "./entities/hover.webTokens";
 import apiMethods from '../api/hover.api';
+
+import { webTokens } from "./entities/hover.webTokens";
+import { logs } from "./entities/hover.logs";
+import { Accounts } from "./entities/hover.accounts";
 
 const api = new apiMethods();
 export const AppDataSource = new DataSource({
@@ -13,11 +16,33 @@ export const AppDataSource = new DataSource({
     database: "hovercraft.chat",
     synchronize: true,
     logging: false,
-    entities: [webTokens],
+    entities: [
+        webTokens,
+        logs,
+        Accounts
+    ],
     migrations: [],
     subscribers: [],
 })
 
 AppDataSource.initialize().then(() => {
     api.Log(`Data Source has been initialized`);
+
+    const tokenRepo = AppDataSource.getRepository(webTokens);
+
+    tokenRepo.clear().then(() => api.Log('Flushed old web tokens'));
+
+    const accRepo = AppDataSource.getRepository(Accounts);
+
+    const newAcc: Accounts = new Accounts();
+    newAcc.username = 'UncleMole';
+    newAcc.password = '$2y$10$K8AKWTug4HLH.JMmNguek.PdcNz/1d/ugCdcb/1sc9VIYg7xlzfgG';
+    newAcc.discordAuth = 'None';
+    newAcc.createdTime = api.getUnix();
+    newAcc.lastActive = api.getUnix();
+    newAcc.ip = '127.0.0.1';
+    newAcc.banned = false;
+
+    accRepo.save(newAcc).then(acc => api.Log(`created new account with sqlid of ${acc.id}`));
+
 }).catch(err => {api.Log(err)})
