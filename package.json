@@ -8,7 +8,8 @@
       "start": "node ./build/hover.core.js",
       "devstart": "rimraf dist && npx tsc && node ./build/hover.core.js",
       "dev": "npx tsc -w & nodemon dist/hover.core.js",
-      "typeorm": "typeorm-ts-node-commonjs"
+      "typeorm": "typeorm-ts-node-commonjs",
+      "generate": "ts-node ./node_modules/typeorm/cli.js migration:generate -n PostRefactoring -p"
    },
    "keywords": [],
    "author": "",

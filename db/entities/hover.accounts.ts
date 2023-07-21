@@ -6,6 +6,9 @@ export class Accounts extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
+    @PrimaryGeneratedColumn("uuid")
+    UUID: string
+
     @Column()
     username: string
 
@@ -20,6 +23,9 @@ export class Accounts extends BaseEntity {
 
     @Column()
     lastActive: number
+
+    @Column()
+    totalChatSessions: number
 
     @Column()
     ip: string

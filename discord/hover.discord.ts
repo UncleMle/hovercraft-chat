@@ -6,10 +6,11 @@ import commands from './commands/discord.commands';
 import { AppDataSource } from '../db/data-source';
 import { webTokens } from '../db/entities/hover.webTokens';
 import routes from '../hover.routes';
+import { Accounts } from '../db/entities/hover.accounts';
 
-const cmds = new commands();
-const api = new apiMethods();
-const client = new Client({ intents: [GatewayIntentBits.DirectMessages, GatewayIntentBits.Guilds, GatewayIntentBits.GuildBans, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+const cmds: commands = new commands();
+const api: apiMethods = new apiMethods();
+const client: Client = new Client({ intents: [GatewayIntentBits.DirectMessages, GatewayIntentBits.Guilds, GatewayIntentBits.GuildBans, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
 client.login(conf.token);
 
@@ -25,8 +26,10 @@ client.on('ready', async() => {
         channel.messages.fetch(conf.statMsgId)
         .then(async(message) => {
                 const tokenRepo = AppDataSource.getRepository(webTokens);
+                const accRepo = AppDataSource.getRepository(Accounts);
 
                 const allRecords = await tokenRepo.find();
+                const allAccounts = await accRepo.find();
 
                 const serviceStats = new EmbedBuilder()
                 .setColor(0x043667)
@@ -38,7 +41,7 @@ client.on('ready', async() => {
                     { name: 'Domain', value: `https://hovercraft.chat`, inline: true },
                     { name: 'Total Requests', value: `0`, inline: true },
                     { name: 'Total Current Chat Sessions', value: `${allRecords.length}`, inline: true },
-                    { name: 'Total Accounts registered', value: `0`, inline: true }
+                    { name: 'Total Accounts registered', value: `${allAccounts.length}`, inline: true }
                 )
                 .setTimestamp()
                 message.edit({ embeds: [serviceStats] });
@@ -59,7 +62,16 @@ client.on('messageCreate', async(message: Message<boolean>) => {
     }
 });
 
-export default function consoleLog(message: any) {
-    const channel = client.channels.cache.get('1128890846981410837') as TextChannel;
-    channel.send(message);
+class sendApi {
+    consoleLog(message: any) {
+        const channel = client.channels.cache.get(conf.botConsoleChannel) as TextChannel;
+        channel? channel.send(message): (null);
+    }
+
+    sendEmbed(channelId: string, embed: EmbedBuilder) {
+        const channel = client.channels.cache.get(channelId) as TextChannel;
+        channel? channel.send({ embeds: [embed] }): (null);
+    }
 }
+
+export default sendApi;

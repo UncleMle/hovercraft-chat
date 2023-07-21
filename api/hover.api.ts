@@ -7,20 +7,20 @@ import { AppDataSource } from '../db/data-source';
 
 class apiMethods {
 
-    async Log(text : any) {
+    public Log(text : any): void {
         console.log(gray(`${this.srvTime()}`), green(`| ${text}`));
     }
 
-    srvTime(): string {
+    public srvTime(): string {
         var date = new Date();
         return `[${date.getFullYear()}/${date.getMonth() < 10 ? "0"+date.getMonth() : date.getMonth()}/${date.getDay() < 10 ? "0"+date.getDay() : date.getDay()}] [${date.getHours() < 10 ? "0"+date.getHours() : date.getHours()}:${date.getMinutes() < 10 ? "0"+date.getMinutes() : date.getMinutes()}:${date.getSeconds() < 10 ? "0"+date.getSeconds() : date.getSeconds()}]`;
     }
 
-    getUnix(): number {
+    public getUnix(): number {
         return Math.round(Date.now() / 1000);
     }
 
-    async checkAccProps(header: IncomingHttpHeaders, exceptPropsItems: string[]): Promise<Boolean> {
+    public async checkAccProps(header: IncomingHttpHeaders, exceptPropsItems: string[]): Promise<Boolean> {
         let exceptProps: string[] = exceptPropsItems;
         let head: [string, string | string[]][] = Object.entries(header);
 
@@ -32,7 +32,7 @@ class apiMethods {
         return foundItems.length > 2 ? true : false;
     }
 
-    async getHeaderItem(header: IncomingHttpHeaders, item: string): Promise<string | false | string[]> {
+    public async getHeaderItem(header: IncomingHttpHeaders, item: string): Promise<string | false | string[]> {
         let headerObj: [string, string | string[]][] = Object.entries(header);
 
         let tok: string | string[];
@@ -42,7 +42,15 @@ class apiMethods {
         return tok? tok : false;
     }
 
-    errHandle(handle : string, res : Response) {
+    public async formatUnixTimestamp (unixTimestamp): Promise<string> {
+        const date = new Date(unixTimestamp * 1000)
+        const hours = date.getHours()
+        const minutes = date.getMinutes()
+        const seconds = date.getSeconds()
+        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
+    }
+
+    public errHandle(handle : string, res : Response): void {
         switch(handle) {
             case 'auth':
             {
@@ -73,7 +81,7 @@ class apiMethods {
         }
     }
 
-    async authToken(token : string): Promise<boolean> {
+    public async authToken(token : string): Promise<boolean> {
         if(!token) return;
         try {
             const decoded = jwt.verify(token, "jwtPrivateKey");
@@ -83,7 +91,7 @@ class apiMethods {
         }
     }
 
-    charGen(len : number): string {
+    public charGen(len : number): string {
         const tokenChars = "1234567890QWERTYUIOPLKJHGFDDSAQWEZXCVBNM";
         var res = '';
         for(var i = 0; i < len; i++) {

@@ -11,8 +11,8 @@ const api : apiMethods = new apiMethods();
 const router: Router = express.Router();
 
 const limiter: RateLimitRequestHandler = rateLimit({
-	windowMs: 15 * 60 * 1000,
-	max: 2,
+	windowMs: 30 * 60 * 1000,
+	max: 5,
     message: 'Too many accounts created from this IP, please try again later',
 	standardHeaders: true,
 	legacyHeaders: false,
@@ -21,7 +21,7 @@ const limiter: RateLimitRequestHandler = rateLimit({
 export default router.get('/', limiter, async(req: Request, res: Response) => {
     const headers: IncomingHttpHeaders = req.headers;
     const headerCheck: Boolean = await api.checkAccProps(headers, ['x-auth-token', 'x-auth-user', 'x-auth-pass']);
-    const tokenAuth = headerCheck? api.authToken(req.header('x-auth-token')): "";
+    const tokenAuth = headerCheck? await api.authToken(req.header('x-auth-token')): "";
 
     if(headerCheck && tokenAuth) {
 
@@ -38,12 +38,13 @@ export default router.get('/', limiter, async(req: Request, res: Response) => {
             account.createdTime = api.getUnix();
             account.lastActive = api.getUnix();
             account.discordAuth = 'None';
+            account.totalChatSessions = 0;
 
             accRepo.save(account).then(acc => {
-                api.Log(`A new account was created with [SQLID: ${acc.id}, username: ${acc.username}]`)
+                api.Log(`A new account was created with [SQLID: ${acc.UUID}, username: ${acc.username}]`)
                 res.status(200).send({
                     status: true,
-                    data: `A new account was created with [SQLID: ${acc.id}, username: ${acc.username}]`
+                    data: `A new account was created with [SQLID: ${acc.UUID}, username: ${acc.username}]`
                 });
             });
 

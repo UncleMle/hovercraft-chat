@@ -30,7 +30,7 @@ async function getAccount(username: string, password: string, res: Response) {
             console.log(accAuth);
             if(accAuth) {
                 res.status(300).send({
-                    sqlid: findAcc.id,
+                    sqlid: findAcc.UUID,
                     username: findAcc.username,
                     createdTime: findAcc.createdTime,
                     lastActive: findAcc.lastActive,
