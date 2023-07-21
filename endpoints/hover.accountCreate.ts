@@ -11,8 +11,8 @@ const api : apiMethods = new apiMethods();
 const router: Router = express.Router();
 
 const limiter: RateLimitRequestHandler = rateLimit({
-	windowMs: 15 * 60 * 1000,
-	max: 30000,
+	windowMs: 30 * 60 * 1000,
+	max: 5,
     message: 'Too many accounts created from this IP, please try again later',
 	standardHeaders: true,
 	legacyHeaders: false,
@@ -38,6 +38,7 @@ export default router.get('/', limiter, async(req: Request, res: Response) => {
             account.createdTime = api.getUnix();
             account.lastActive = api.getUnix();
             account.discordAuth = 'None';
+            account.totalChatSessions = 0;
 
             accRepo.save(account).then(acc => {
                 api.Log(`A new account was created with [SQLID: ${acc.UUID}, username: ${acc.username}]`)

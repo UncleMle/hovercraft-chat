@@ -25,6 +25,9 @@ export class Accounts extends BaseEntity {
     lastActive: number
 
     @Column()
+    totalChatSessions: number
+
+    @Column()
     ip: string
 
     @Column()
