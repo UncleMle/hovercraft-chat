@@ -15,8 +15,8 @@ export class Accounts extends BaseEntity {
     @Column()
     password: string
 
-    @Column()
-    discordAuth: string
+    @Column('simple-json', { nullable: true })
+    discordData: string
 
     @Column()
     createdTime: number

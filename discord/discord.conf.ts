@@ -7,7 +7,10 @@ type Config = {
     staffRoles: string[],
     statUpdateTime: number,
     statChannel: string,
-    statMsgId: string
+    statMsgId: string,
+    clientId: string,
+    clientSecret: string,
+    redirectUrl: string
 };
 
 const config : Config = {
@@ -19,7 +22,10 @@ const config : Config = {
     staffRoles: ['Staff Team'],
     statUpdateTime: 10,
     statChannel: '1128895284106240114',
-    statMsgId: '1129109544669298739'
+    statMsgId: '1129109544669298739',
+    clientId: '1128841767756759080',
+    clientSecret: 'YR3-Ft8VEL-vYsCxxOXkqHUCGVpSGEaq',
+    redirectUrl: 'http://localhost:8081/auth/discord'
 }
 
 export default config;
