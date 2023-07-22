@@ -21,12 +21,24 @@ const limiter: RateLimitRequestHandler = rateLimit({
 
 export default router.get('/', limiter, async(req: Request, res: Response): Promise<void | Response> => {
     const headers: IncomingHttpHeaders = req.headers;
-    const headerCheck: Boolean = await api.checkAccProps(headers, ['x-auth-token', 'x-auth-user', 'x-auth-pass']);
+    const headerCheck: Boolean = await api.checkHeaderProps(headers, ['x-auth-token', 'x-auth-user', 'x-auth-pass', 'x-auth-email']);
     const tokenAuth: string | boolean = headerCheck? await api.authToken(req.header('x-auth-token')): (null);
 
     if(headerCheck && tokenAuth) {
 
         try {
+            const accRepo: Repository<Accounts> = AppDataSource.getRepository(Accounts);
+
+            console.log('email '+req.header('x-auth-email'));
+
+            /*
+            const foundAccount = await accRepo.find({
+                where: [
+                    { username: req.header('x-auth-user') },
+                    { email: req.header('x-auth-email') }
+                ]
+            })
+            */
 
             if (!await api.containsNumbers(req.header('x-auth-pass')) || !await api.containsUppercase(req.header('x-auth-pass')) || req.header('x-auth-pass').length < 5) {
                 res.send({
@@ -36,13 +48,11 @@ export default router.get('/', limiter, async(req: Request, res: Response): Prom
                 return;
             }
 
-
             let hashPass: string | Boolean = await bcrypt.hash(req.header('x-auth-pass'), _SHARED.saltRounds);
-
-            const accRepo: Repository<Accounts> = AppDataSource.getRepository(Accounts);
 
             const account: Accounts = new Accounts();
             account.username = req.header('x-auth-user');
+            account.email = req.header('x-auth-email');
             account.password = hashPass;
             account.banned = false;
             account.ip = '127.0.0.1';

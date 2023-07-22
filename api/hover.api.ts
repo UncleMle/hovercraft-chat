@@ -20,7 +20,7 @@ class apiMethods {
         return Math.round(Date.now() / 1000);
     }
 
-    public async checkAccProps(header: IncomingHttpHeaders, exceptPropsItems: string[]): Promise<Boolean> {
+    public async checkHeaderProps(header: IncomingHttpHeaders, exceptPropsItems: string[]): Promise<Boolean> {
         let exceptProps: string[] = exceptPropsItems;
         let head: [string, string | string[]][] = Object.entries(header);
 
@@ -29,7 +29,7 @@ class apiMethods {
             if(exceptProps.indexOf(key) != -1) { foundItems.push(1) };
         }
 
-        return foundItems.length > 2 ? true : false;
+        return foundItems.length >= exceptProps.length ? true : false;
     }
 
     public async getHeaderItem(header: IncomingHttpHeaders, item: string): Promise<string | false | string[]> {

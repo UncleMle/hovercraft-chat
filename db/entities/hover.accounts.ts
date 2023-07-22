@@ -13,6 +13,9 @@ export class Accounts extends BaseEntity {
     username: string
 
     @Column()
+    email: string
+
+    @Column()
     password: string
 
     @Column('simple-json', { nullable: true })

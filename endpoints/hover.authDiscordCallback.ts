@@ -11,10 +11,8 @@ const router: Router = express.Router();
 
 export default router.get('/', async(req: Request, res: Response): Promise<void | boolean> => {
 
-    console.log(req.query.code);
-
     const headers: IncomingHttpHeaders = req.headers;
-    const headerCheck: Boolean = await api.checkAccProps(headers, ['x-auth-token', 'x-auth-user', 'x-auth-pass']);
+    const headerCheck: Boolean = await api.checkHeaderProps(headers, ['x-auth-token', 'x-auth-user', 'x-auth-pass']);
     const tokenAuth: string | boolean = headerCheck? await api.authToken(req.header('x-auth-token')): (null);
 
     if(!headerCheck || !tokenAuth || !req.query.code) return api.errHandle('param', res);
