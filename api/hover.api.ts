@@ -81,6 +81,14 @@ class apiMethods {
         }
     }
 
+    public async containsNumbers(str: string): Promise<boolean | string> {
+        return /\d/.test(str);
+    }
+
+    public async containsUppercase(str: string): Promise<boolean | string> {
+        return /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/.test(str);
+    }
+
     public async authToken(token : string): Promise<boolean> {
         if(!token) return;
         try {
