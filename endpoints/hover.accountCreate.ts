@@ -31,14 +31,18 @@ export default router.get('/', limiter, async(req: Request, res: Response): Prom
 
             console.log('email '+req.header('x-auth-email'));
 
-            /*
             const foundAccount = await accRepo.find({
                 where: [
                     { username: req.header('x-auth-user') },
                     { email: req.header('x-auth-email') }
                 ]
             })
-            */
+
+            if(foundAccount.length > 0) return res.send({
+                status: false,
+                error: 'Invalid credentials, please use different credentials.'
+            });
+
 
             if (!await api.containsNumbers(req.header('x-auth-pass')) || !await api.containsUppercase(req.header('x-auth-pass')) || req.header('x-auth-pass').length < 5) {
                 res.send({
