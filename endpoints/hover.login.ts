@@ -17,12 +17,13 @@ export default router.get('/', async(req: Request, res: Response): Promise<void>
 
         accRepo.findOne({ where: {username: req.header('x-auth-user')} }).then(async(_account) => {
             if(!_account) return res.status(404).send({
-                status: true,
+                status: false,
                 error: 'Incorrect credentials'
             })
 
             const passCheck = await bcrypt.compare(req.header('x-auth-pass'), _account.password);
-            passCheck? sendAccInfo(_account, res): (null);
+
+            passCheck? sendAccInfo(_account, res): res.status(401).send({ status: false, error: 'Incorrect credentials'});
         })
 
 
