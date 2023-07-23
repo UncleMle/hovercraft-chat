@@ -29,17 +29,17 @@ class apiMethods {
             if(exceptProps.indexOf(key) != -1) { foundItems.push(1) };
         }
 
-        return foundItems.length >= exceptProps.length ? true : false;
+        return foundItems.length >= exceptProps.length? true: false;
     }
 
     public async getHeaderItem(header: IncomingHttpHeaders, item: string): Promise<string | false | string[]> {
         let headerObj: [string, string | string[]][] = Object.entries(header);
 
-        let tok: string | string[];
+        let headerItem: string | string[];
 
-        headerObj.find((obj, idx) => obj[idx] === item ? tok=obj[1] : "");
+        headerObj.find((obj, idx) => obj[idx] === item? headerItem=obj[1]: (null));
 
-        return tok? tok : false;
+        return headerItem? headerItem: false;
     }
 
     public async valEmail(emailAddress: string): Promise<boolean> {
@@ -54,6 +54,8 @@ class apiMethods {
         const seconds = date.getSeconds()
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
     }
+
+    
 
     public errHandle(handle : string, res : Response): void {
         switch(handle) {
