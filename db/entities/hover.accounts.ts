@@ -13,10 +13,13 @@ export class Accounts extends BaseEntity {
     username: string
 
     @Column()
-    password: string
+    email: string
 
     @Column()
-    discordAuth: string
+    password: string
+
+    @Column('simple-json', { nullable: true })
+    discordData: string
 
     @Column()
     createdTime: number
@@ -26,6 +29,12 @@ export class Accounts extends BaseEntity {
 
     @Column()
     totalChatSessions: number
+
+    @Column("text", { array: true, nullable: true })
+    notifications: string[]
+
+    @Column("text", { array: true, nullable: true })
+    adminPunishments: string[]
 
     @Column()
     ip: string

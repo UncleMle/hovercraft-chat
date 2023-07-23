@@ -20,7 +20,7 @@ class apiMethods {
         return Math.round(Date.now() / 1000);
     }
 
-    public async checkAccProps(header: IncomingHttpHeaders, exceptPropsItems: string[]): Promise<Boolean> {
+    public async checkHeaderProps(header: IncomingHttpHeaders, exceptPropsItems: string[]): Promise<Boolean> {
         let exceptProps: string[] = exceptPropsItems;
         let head: [string, string | string[]][] = Object.entries(header);
 
@@ -29,7 +29,7 @@ class apiMethods {
             if(exceptProps.indexOf(key) != -1) { foundItems.push(1) };
         }
 
-        return foundItems.length > 2 ? true : false;
+        return foundItems.length >= exceptProps.length ? true : false;
     }
 
     public async getHeaderItem(header: IncomingHttpHeaders, item: string): Promise<string | false | string[]> {
@@ -40,6 +40,11 @@ class apiMethods {
         headerObj.find((obj, idx) => obj[idx] === item ? tok=obj[1] : "");
 
         return tok? tok : false;
+    }
+
+    public async valEmail(emailAddress: string): Promise<boolean> {
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        return re.test(String(emailAddress).toLowerCase());
     }
 
     public async formatUnixTimestamp (unixTimestamp): Promise<string> {
@@ -79,6 +84,14 @@ class apiMethods {
             }
             default: break;
         }
+    }
+
+    public async containsNumbers(str: string): Promise<boolean | string> {
+        return /\d/.test(str);
+    }
+
+    public async containsUppercase(str: string): Promise<boolean | string> {
+        return /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/.test(str);
     }
 
     public async authToken(token : string): Promise<boolean> {
