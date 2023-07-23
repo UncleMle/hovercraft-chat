@@ -1,4 +1,5 @@
 import express, { Express } from 'express';
+import { color, log, red, green, cyan, cyanBright, gray } from 'console-log-colors';
 import http from 'http';
 import apiMethods from './api/hover.api';
 import cors from 'cors';
@@ -21,14 +22,14 @@ app.use(bodyParser.json());
 
 
 app.listen(port, (): void => {
-    api.Log(`App is now listening on port ${port}`);
+    api.Log(`App is now listening on port`+red(` ${port}`));
 });
 
 routes.forEach((route : any) => {
     app.use(route.path, route.location);
 })
 
-api.Log(`All ${routes.length} routes were loaded.`);
+api.Log(`All `+cyan(`${routes.length}`)+` routes were loaded.`);
 
 dc?api.Log('Discord intergration now running'):"";
 socketEvents?api.Log('Socket events loaded'):"";
