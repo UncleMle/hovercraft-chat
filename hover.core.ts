@@ -31,8 +31,8 @@ routes.forEach((route : any) => {
 
 api.Log(`All `+cyan(`${routes.length}`)+` routes were loaded.`);
 
-dc?api.Log('Discord intergration now running'):"";
-socketEvents?api.Log('Socket events loaded'):"";
+dc?api.Log('Discord intergration now running'):(null);
+socketEvents?api.Log('Socket events loaded'):(null);
 
 export default app;
 
