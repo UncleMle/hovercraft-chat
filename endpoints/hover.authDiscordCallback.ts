@@ -12,13 +12,8 @@ const router: Router = express.Router();
 export default router.get('/', async(req: Request, res: Response): Promise<void | boolean> => {
 
     const headers: IncomingHttpHeaders = req.headers;
-<<<<<<< HEAD
     const headerCheck: Boolean = await apiMethods.checkHeaderProps(headers, ['x-auth-token', 'x-auth-user', 'x-auth-pass']);
-    const tokenAuth: string | boolean = headerCheck? await apiMethods.authToken(req.header('x-auth-token')): (null);
-=======
-    const headerCheck: Boolean = await api.checkHeaderProps(headers, ['x-auth-token', 'x-auth-user']);
-    const tokenAuth: string | boolean = headerCheck? await api.authToken(req.header('x-auth-token')): (null);
->>>>>>> 9232663a63be0d0096585a1ca33200bbbe95ef54
+    const tokenAuth: string | boolean = headerCheck? await apiMethods.authToken(req.header('x-auth-token')): (null)
 
     if(!headerCheck || !tokenAuth || !req.query.code) return apiMethods.errHandle('param', res);
 
@@ -59,13 +54,13 @@ export default router.get('/', async(req: Request, res: Response): Promise<void 
             return;
         };
 
-        let start: number = api.getUnix();
+        let start: number = apiMethods.getUnix();
 
         accountRepo.update({ username: req.header('x-auth-user') }, {
             discordData: userResponse.data
         }).then(() => {
-            let end: number = api.getUnix() - start;
-            api.Log(`Query exec in ${new Date(end*1000)}`);
+            let end: number = apiMethods.getUnix() - start;
+            apiMethods.Log(`Query exec in ${new Date(end*1000)}`);
         })
 
 

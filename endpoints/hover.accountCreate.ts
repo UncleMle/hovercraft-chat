@@ -29,20 +29,10 @@ export default router.get('/', limiter, async(req: Request, res: Response): Prom
         try {
             const accRepo: Repository<Accounts> = AppDataSource.getRepository(Accounts);
 
-<<<<<<< HEAD
             if(!await apiMethods.valEmail(req.header("x-auth-email"))) return res.status(301).send({
                 status: false,
                 error: "Invalid email address"
             });
-=======
-            if(!await api.valEmail(req.header('x-auth-email'))) {
-                res.send({
-                    status: false,
-                    error: 'Ensure you have entered a valid email address'
-                });
-                return;
-            }
->>>>>>> 9232663a63be0d0096585a1ca33200bbbe95ef54
 
             const foundAccount: Accounts[] = await accRepo.find({
                 where: [
@@ -72,15 +62,9 @@ export default router.get('/', limiter, async(req: Request, res: Response): Prom
             account.email = req.header('x-auth-email');
             account.password = hashPass;
             account.banned = false;
-<<<<<<< HEAD
-            account.ip = '127.0.0.1';
+            account.ip = req.socket.remoteAddress;
             account.createdTime = apiMethods.getUnix();
             account.lastActive = apiMethods.getUnix();
-=======
-            account.ip = req.socket.remoteAddress;
-            account.createdTime = api.getUnix();
-            account.lastActive = api.getUnix();
->>>>>>> 9232663a63be0d0096585a1ca33200bbbe95ef54
             account.discordData = null;
             account.totalChatSessions = 0;
             account.adminPunishments = [];
@@ -91,29 +75,20 @@ export default router.get('/', limiter, async(req: Request, res: Response): Prom
             let startTime: number = new Date().valueOf();
 
             accRepo.save(account).then(acc => {
-<<<<<<< HEAD
                 apiMethods.Log(`A new account was created with [SQLID: ${acc.UUID}, username: ${acc.username}]`)
-=======
-                api.Log(`A new account was created with `+red(`[SQLID: ${acc.UUID}, username: ${acc.username}]`));
                 accObj = acc;
             }).then(() => {
                 let endTime: number = new Date().valueOf();
                 let queryTime = endTime - startTime;
 
->>>>>>> 9232663a63be0d0096585a1ca33200bbbe95ef54
-                res.status(200).send({
+              res.status(200).send({
                     status: true,
                     data: `A new account was created with [SQLID: ${accObj.UUID}, username: ${accObj.username}]`,
                     queryTime: queryTime+"ms"
                 });
             });
 
-<<<<<<< HEAD
         } catch(e: any) { apiMethods.Log((e as Error).message) }
-=======
-
-        } catch(e: any) { api.Log((e as Error).message) }
->>>>>>> 9232663a63be0d0096585a1ca33200bbbe95ef54
 
     } else return apiMethods.errHandle('param', res);
 });

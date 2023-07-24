@@ -11,8 +11,8 @@ const router = express.Router();
 
 export default router.get('/', async(req : Request, res: Response) => {
     const headers: IncomingHttpHeaders = req.headers;
-    const headerCheck: Boolean = await api.checkHeaderProps(headers, ['x-auth-token']);
-    const tokenAuth = headerCheck? await api.authToken(req.header('x-auth-token')):(null);
+    const headerCheck: Boolean = await apiMethods.checkHeaderProps(headers, ['x-auth-token']);
+    const tokenAuth = headerCheck? await apiMethods.authToken(req.header('x-auth-token')):(null);
 
     const tokenRepo: Repository<webTokens> = AppDataSource.getRepository(webTokens);
 
@@ -33,10 +33,10 @@ export default router.get('/', async(req : Request, res: Response) => {
     newToken.adminLevel = 0;
     newToken.accountId = -1;
     newToken.accountUUID = "None";
-    newToken.timeCreated = api.getUnix();
-    newToken.createdAt = api.getUnix();
+    newToken.timeCreated = apiMethods.getUnix();
+    newToken.createdAt = apiMethods.getUnix();
 
-    tokenRepo.save(newToken).catch(err => api.Log(err));
+    tokenRepo.save(newToken).catch(err => apiMethods.Log(err));
 
     res.status(200).send({
         status: true,
