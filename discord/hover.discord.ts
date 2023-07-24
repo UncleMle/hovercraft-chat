@@ -10,7 +10,6 @@ import { Accounts } from '../db/entities/hover.accounts';
 import { Repository } from 'typeorm';
 import { CommandList } from './discord.cmdList';
 
-const cmds: commands = new commands();
 const client: Client = new Client({ intents: [GatewayIntentBits.DirectMessages, GatewayIntentBits.Guilds, GatewayIntentBits.GuildBans, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
 client.login(conf.token);
@@ -57,7 +56,7 @@ client.on('messageCreate', async(message: Message<boolean>): Promise<void> => {
         const args : string[] = message.content.slice(conf.prefix.length).trim().split(' ');
         commandsList.forEach((cmd: CommandList)=> {
             if(cmd.commandName == args[0]) {
-                cmds[cmd.commandName](message, args);
+                commands[cmd.commandName](message, args);
             }
         })
     }

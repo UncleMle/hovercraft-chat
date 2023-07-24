@@ -3,6 +3,8 @@ import { IncomingHttpHeaders } from 'http';
 import jwt from 'jsonwebtoken';
 import { color, log, red, green, cyan, cyanBright, gray } from 'console-log-colors';
 import { AppDataSource } from '../db/data-source';
+import { Repository } from 'typeorm';
+import { webTokens } from '../db/entities/hover.webTokens';
 
 class api {
 
@@ -44,6 +46,14 @@ class api {
     public static async valEmail(emailAddress: string): Promise<boolean> {
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         return re.test(String(emailAddress).toLowerCase());
+    }
+
+    public static async retrieveTokenData(token: string): Promise<webTokens | boolean> {
+        const tokenRepo: Repository<webTokens> = AppDataSource.getRepository(webTokens);
+
+        const findToken: webTokens = await tokenRepo.findOne({ where: { token: token } });
+
+        return findToken? findToken: false;
     }
 
     public static async formatUnixTimestamp (unixTimestamp: number): Promise<string> {

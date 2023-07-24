@@ -1,11 +1,12 @@
 import "reflect-metadata";
-import { DataSource } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 import apiMethods from '../api/hover.api';
 import bcrypt from 'bcrypt';
 
 import { webTokens } from "./entities/hover.webTokens";
 import { logs } from "./entities/hover.logs";
 import { Accounts } from "./entities/hover.accounts";
+import { Sessions } from "./entities/hover.sessions";
 
 export const AppDataSource = new DataSource({
     type: "postgres",
@@ -19,7 +20,8 @@ export const AppDataSource = new DataSource({
     entities: [
         webTokens,
         logs,
-        Accounts
+        Accounts,
+        Sessions
     ],
     migrations: [],
     subscribers: [],
@@ -29,8 +31,11 @@ AppDataSource.initialize().then(async() => {
 
     apiMethods.Log(`Data Source has been initialized`);
 
-    const tokenRepo = AppDataSource.getRepository(webTokens);
+    const tokenRepo: Repository<webTokens> = AppDataSource.getRepository(webTokens);
+    const sessions: Repository<Sessions> = AppDataSource.getRepository(Sessions);
 
     tokenRepo.clear().then(() => apiMethods.Log('Flushed old web tokens'));
+    sessions.clear().then(() => apiMethods.Log('Flushed old sessions'));
+
 
 }).catch(err => {apiMethods.Log(err)})

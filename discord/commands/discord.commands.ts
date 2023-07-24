@@ -8,6 +8,8 @@ import apiMethods from '../../api/hover.api';
 import conf from '../discord.conf';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import sendApi from '../hover.discord';
+import { Session } from 'inspector';
+import { Sessions } from '../../db/entities/hover.sessions';
 
 export default class cmd {
 
@@ -42,7 +44,8 @@ export default class cmd {
             { name: 'Perms: ``everyone`` | '+`${conf.prefix}stats`, value: `${cmd.getDesc('servicestats')}`, inline: true },
             { name: 'Perms: ``Developer, Staff`` | '+`${conf.prefix}accinfo`, value: `${cmd.getDesc('accinfo')}`, inline: true },
             { name: 'Perms: ``Developer, Staff`` | '+`${conf.prefix}banacc`, value: `${cmd.getDesc('banacc')}`, inline: true },
-            { name: 'Perms: ``Developer, Staff`` | '+`${conf.prefix}unbanacc`, value: `${cmd.getDesc('unbanacc')}`, inline: true }
+            { name: 'Perms: ``Developer, Staff`` | '+`${conf.prefix}unbanacc`, value: `${cmd.getDesc('unbanacc')}`, inline: true },
+            { name: 'Perms: ``Developer`` | '+`${conf.prefix}sessiondata`, value: `${cmd.getDesc('sessiondata')}`, inline: true }
         )
         .setTimestamp()
         message.channel.send({ embeds: [help] });
@@ -130,6 +133,33 @@ export default class cmd {
 
             })
         })
+    }
+
+    public static async sessiondata(message: Message<boolean>, args: string[]): Promise<Message<boolean> | void> {
+        if(!await cmd.checkAuth(message, conf.developerRoles)) return;
+
+        if(!args[1]) return cmd.missingParam(message, 'sessiondata', ['sessionId']);
+
+        const sessionRepo: Repository<Sessions> = AppDataSource.getRepository(Sessions);
+
+        const findSession = await sessionRepo.findOne({ where: { sessionId: args[1] } });
+        if(!findSession) return cmd.errEmbed(message, 'sessiondata', 'Invalid or expired session ID');
+
+        const sessionInfo: EmbedBuilder = new EmbedBuilder()
+        .setColor(0x043667)
+        .setTitle(`**Hovercraft.chat | Session Data**`)
+        .setDescription(`Session Data for session with ID `+'``'+args[1]+'``')
+        .addFields(
+            { name: 'Total Messages', value: `${findSession.messages == null ? 0 : findSession.messages.length}`, inline: true },
+            { name: 'Created at', value: `${await apiMethods.formatUnixTimestamp(findSession.createdAt)}`, inline: true },
+            { name: 'UUID', value: "``"+findSession.uuid+"``", inline: true },
+            { name: 'SQLID', value: "``"+findSession.id+"``", inline: true },
+            { name: 'Owner Token', value: "``"+findSession.token+"``", inline: true },
+            { name: 'Last updated', value: "``"+findSession.updatedAtDate+"``", inline: true }
+        )
+        .setTimestamp()
+        message.channel.send({ embeds: [sessionInfo] });
+
     }
 
     private static missingParam(message: Message<boolean>, commandName: string, missingParams: string[]): void {

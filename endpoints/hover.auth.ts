@@ -8,7 +8,6 @@ import { IncomingHttpHeaders } from 'http';
 
 const router = express.Router();
 
-
 export default router.get('/', async(req : Request, res: Response) => {
     const headers: IncomingHttpHeaders = req.headers;
     const headerCheck: Boolean = await apiMethods.checkHeaderProps(headers, ['x-auth-token']);
@@ -23,7 +22,10 @@ export default router.get('/', async(req : Request, res: Response) => {
         _foundToken? res.status(200).send({ status: true, data: _foundToken }): (null)
     ): (null);
 
-    if(_foundToken) return;
+    if(_foundToken) return res.status(401).send({
+        status: false,
+        error: 'Invalid or expired token'
+    });
 
     const token: string = jwt.sign({}, "jwtPrivateKey", { expiresIn: "70m" });
 

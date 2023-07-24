@@ -81,7 +81,7 @@ export default router.get('/', limiter, async(req: Request, res: Response): Prom
                 let endTime: number = new Date().valueOf();
                 let queryTime = endTime - startTime;
 
-              res.status(200).send({
+                res.status(200).send({
                     status: true,
                     data: `A new account was created with [SQLID: ${accObj.UUID}, username: ${accObj.username}]`,
                     queryTime: queryTime+"ms"
