@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, CreateDateColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Accounts extends BaseEntity {
@@ -14,6 +14,9 @@ export class Accounts extends BaseEntity {
 
     @Column()
     email: string
+
+    @Column()
+    adminLevel: number
 
     @Column()
     password: string
@@ -41,4 +44,10 @@ export class Accounts extends BaseEntity {
 
     @Column()
     banned: boolean
+
+    @CreateDateColumn()
+    createdAtDate: Date
+
+    @UpdateDateColumn()
+    updatedAtDate: Date
 }

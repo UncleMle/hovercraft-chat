@@ -42,6 +42,7 @@
       "typeorm": "^0.3.17",
       "typescript": "^5.1.6",
       "uuid": "^9.0.0",
+      "vim": "^0.1.0",
       "yarn": "^1.22.19"
    },
    "devDependencies": {

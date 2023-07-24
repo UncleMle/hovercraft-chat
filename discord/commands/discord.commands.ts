@@ -172,7 +172,7 @@ export default class cmd {
     }
 
     private static getDesc(commandName: string): string[] {
-        return cmdList.map(x => x.commandName === commandName ? x.desc:(null));
+        return cmdList.map(x => x.commandName === commandName? x.desc:(null));
     }
 
     private static success(message: Message<boolean>, commandName: string, successMsg: string): void {

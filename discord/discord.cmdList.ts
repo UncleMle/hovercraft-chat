@@ -1,4 +1,4 @@
-type CommandList = { commandName: string, desc: string };
+export type CommandList = { commandName: string, desc: string };
 
 let commands : CommandList[] = [
     { commandName: 'help', desc: "Displays all commands" },
@@ -6,6 +6,6 @@ let commands : CommandList[] = [
     { commandName: 'accinfo', desc: "View information about a specific account via SQLID" },
     { commandName: 'banacc', desc: "Ban user via SQLID" },
     { commandName: 'unbanacc', desc: 'Unban user via SQLID' }
-]
+];
 
 export default commands;

@@ -8,6 +8,7 @@ import { webTokens } from '../db/entities/hover.webTokens';
 import routes from '../hover.routes';
 import { Accounts } from '../db/entities/hover.accounts';
 import { Repository } from 'typeorm';
+import { CommandList } from './discord.cmdList';
 
 const cmds: commands = new commands();
 const client: Client = new Client({ intents: [GatewayIntentBits.DirectMessages, GatewayIntentBits.Guilds, GatewayIntentBits.GuildBans, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
@@ -54,7 +55,7 @@ client.on('ready', async(): Promise<void> => {
 client.on('messageCreate', async(message: Message<boolean>): Promise<void> => {
     if(conf.botCommandChannels.indexOf(message.channelId) != -1 && message.content.startsWith(conf.prefix)) {
         const args : string[] = message.content.slice(conf.prefix.length).trim().split(' ');
-        commandsList.forEach(cmd => {
+        commandsList.forEach((cmd: CommandList)=> {
             if(cmd.commandName == args[0]) {
                 cmds[cmd.commandName](message, args);
             }
@@ -62,7 +63,7 @@ client.on('messageCreate', async(message: Message<boolean>): Promise<void> => {
     }
 });
 
-class sendApi {
+export default class sendApi {
     public static channelSend(channelId: string, message: string | MessagePayload | MessageCreateOptions): void {
         const channel = client.channels.cache.get(channelId) as TextChannel;
         channel? channel.send(message): (null);
@@ -73,5 +74,3 @@ class sendApi {
         channel? channel.send({ embeds: [embed] }): (null);
     }
 }
-
-export default sendApi;
