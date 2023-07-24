@@ -56,7 +56,7 @@ client.on('messageCreate', async(message: Message<boolean>): Promise<void> => {
         const args : string[] = message.content.slice(conf.prefix.length).trim().split(' ');
         commandsList.forEach((cmd: CommandList)=> {
             if(cmd.commandName == args[0]) {
-                commands[cmd.commandName](message, args);
+                commands[cmd.commandName.toLowerCase()](message, args);
             }
         })
     }
