@@ -40,7 +40,7 @@ export default router.get('/', limiter, async(req : Request, res : Response): Pr
 
         sessionRepo.save(newSession).then(savedRepo => {
 
-            const sessId = savedRepo.uuid.split('-')[1];
+            const sessId = `${savedRepo.uuid.split('-')[1]}${savedRepo.uuid.split('-')[0][0]}${savedRepo.uuid.split('-')[0][1]}`;
 
             tokenRepo.update({ token: req.header('x-auth-token') }, {
                 sessionId: sessId
