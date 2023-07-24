@@ -1,7 +1,6 @@
 import express, { Request, Response, Router } from 'express';
 import apiMethods from '../api/hover.api';
 
-const api: apiMethods = new apiMethods();
 const router: Router = express.Router();
 
 export default router.get('/', async(req: Request, res: Response): Promise<void | boolean> => {

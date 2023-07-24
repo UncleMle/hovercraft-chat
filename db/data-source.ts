@@ -7,7 +7,6 @@ import { webTokens } from "./entities/hover.webTokens";
 import { logs } from "./entities/hover.logs";
 import { Accounts } from "./entities/hover.accounts";
 
-const api = new apiMethods();
 export const AppDataSource = new DataSource({
     type: "postgres",
     host: "localhost",
@@ -28,10 +27,10 @@ export const AppDataSource = new DataSource({
 
 AppDataSource.initialize().then(async() => {
 
-    api.Log(`Data Source has been initialized`);
+    apiMethods.Log(`Data Source has been initialized`);
 
     const tokenRepo = AppDataSource.getRepository(webTokens);
 
-    tokenRepo.clear().then(() => api.Log('Flushed old web tokens'));
+    tokenRepo.clear().then(() => apiMethods.Log('Flushed old web tokens'));
 
-}).catch(err => {api.Log(err)})
+}).catch(err => {apiMethods.Log(err)})

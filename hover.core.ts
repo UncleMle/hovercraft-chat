@@ -11,8 +11,6 @@ import 'reflect-metadata';
 import dc from './discord/hover.discord';
 import socketEvents from './hover.socketEvents';
 
-const api = new apiMethods();
-
 const app : Express = express();
 const port : number = 8081;
 
@@ -22,17 +20,17 @@ app.use(bodyParser.json());
 
 
 app.listen(port, (): void => {
-    api.Log(`App is now listening on port`+red(` ${port}`));
+    apiMethods.Log(`App is now listening on port`+red(` ${port}`));
 });
 
 routes.forEach((route : any) => {
     app.use(route.path, route.location);
 })
 
-api.Log(`All `+cyan(`${routes.length}`)+` routes were loaded.`);
+apiMethods.Log(`All `+cyan(`${routes.length}`)+` routes were loaded.`);
 
-dc?api.Log('Discord intergration now running'):"";
-socketEvents?api.Log('Socket events loaded'):"";
+dc?apiMethods.Log('Discord intergration now running'):"";
+socketEvents?apiMethods.Log('Socket events loaded'):"";
 
 export default app;
 

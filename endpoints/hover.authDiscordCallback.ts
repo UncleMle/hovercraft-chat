@@ -6,16 +6,15 @@ import { IncomingHttpHeaders } from 'http';
 import { Accounts } from '../db/entities/hover.accounts';
 import { AppDataSource } from '../db/data-source';
 
-const api: apiMethods = new apiMethods();
 const router: Router = express.Router();
 
 export default router.get('/', async(req: Request, res: Response): Promise<void | boolean> => {
 
     const headers: IncomingHttpHeaders = req.headers;
-    const headerCheck: Boolean = await api.checkHeaderProps(headers, ['x-auth-token', 'x-auth-user', 'x-auth-pass']);
-    const tokenAuth: string | boolean = headerCheck? await api.authToken(req.header('x-auth-token')): (null);
+    const headerCheck: Boolean = await apiMethods.checkHeaderProps(headers, ['x-auth-token', 'x-auth-user', 'x-auth-pass']);
+    const tokenAuth: string | boolean = headerCheck? await apiMethods.authToken(req.header('x-auth-token')): (null);
 
-    if(!headerCheck || !tokenAuth || !req.query.code) return api.errHandle('param', res);
+    if(!headerCheck || !tokenAuth || !req.query.code) return apiMethods.errHandle('param', res);
 
     try {
 
@@ -64,6 +63,6 @@ export default router.get('/', async(req: Request, res: Response): Promise<void 
             info: 'Discord data saved'
         });
 
-    } catch(e: any) { (api.Log('[AXIOS] '+(e as Error).message), api.errHandle('auth', res)) }
+    } catch(e: any) { (apiMethods.Log('[AXIOS] '+(e as Error).message), apiMethods.errHandle('auth', res)) }
 
 })

@@ -2,7 +2,6 @@ import express, { Request, Response } from 'express';
 import apiMethods from '../api/hover.api';
 import jwt from 'jsonwebtoken';
 
-const api = new apiMethods();
 const router = express.Router();
 
 

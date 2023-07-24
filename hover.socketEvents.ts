@@ -6,21 +6,20 @@ import { createServer } from 'http';
 import app from './hover.core';
 
 const httpServer = createServer(app);
-const api = new apiMethods();
 const io : Server = new Server(httpServer, { cors: { origin: 'http://localhost:8080' } });
 
 io.on('connection', (socket: Socket): void => {
-    api.Log('New socket has been created with id of '+socket.id);
+    apiMethods.Log('New socket has been created with id of '+socket.id);
 
     socket.on('send-message', (message: string, roomId: string): void => {
-        api.Log(`Socket Creds from `+ message+ roomId);
+        apiMethods.Log(`Socket Creds from `+ message+ roomId);
         if(!roomId || !message) return;
         socket.to(roomId).emit('recieve-message', message);
     })
 
     socket.on('join-room', (roomId: string): void => {
         if(roomId) {
-            api.Log(`Room with ID ${roomId} was joined`);
+            apiMethods.Log(`Room with ID ${roomId} was joined`);
             socket.join(roomId);
             /*
             const tokenRepo = AppDataSource.getRepository(webTokens);
