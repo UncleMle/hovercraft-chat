@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, CreateDateColumn, UpdateDateColumn } from "typeorm";
-import { messageSave, SessionUser } from "../../shared/hover.types";
+import { messageSave, SessionUser } from '@types';
 
 @Entity()
 export class Sessions extends BaseEntity {
@@ -11,7 +11,7 @@ export class Sessions extends BaseEntity {
     uuid: string
 
     @Column()
-    token: string 
+    token: string
 
     @Column()
     sessionId: string
@@ -19,14 +19,17 @@ export class Sessions extends BaseEntity {
     @Column()
     ownerID: number
 
-    @Column("text", { array: true, nullable: true })
+    @Column("simple-json", { array: true, nullable: true })
     messages: messageSave[]
 
-    @Column("text", { array: true, nullable: true })
+    @Column("jsonb", { nullable: true })
     users: SessionUser[]
 
     @Column()
     ownerUUID: string
+
+    @Column()
+    private: boolean
 
     @Column()
     timeCreated: number

@@ -35,6 +35,7 @@ export default express.Router().get('/', limiter, async(req : Request, res : Res
         newSession.ownerUUID = tokenData.accountUUID;
         newSession.timeCreated = api.getUnix();
         newSession.createdAt = api.getUnix();
+        newSession.private = false;
 
         sessionRepo.save(newSession).then(savedRepo => {
 

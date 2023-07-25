@@ -3,6 +3,11 @@
       "lib": [
          "es2020", "esnext"
       ],
+      "baseUrl": "",
+      "paths": {
+         "@types": ["shared/hover.types.ts"],
+         "@api": ["api/hover.api"]
+      },
       "module": "commonjs",
       "target": "es2020",
       "moduleResolution": "node",

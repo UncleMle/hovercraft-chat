@@ -7,6 +7,8 @@ import hoverAuthDiscordCallback from './endpoints/hover.authDiscordCallback';
 import hoverCheckId from './endpoints/hover.checkId';
 import hoverCheckSessionOwner from './endpoints/hover.checkSessionOwner';
 import hoverUsers from './endpoints/hover.users';
+import hoverClientSessionData from './endpoints/hover.clientSessionData';
+import hoverSessionModify from './endpoints/hover.sessionModify';
 
 let routes: object[] = [
     { path: '/auth', location: hoverAuth },
@@ -17,7 +19,9 @@ let routes: object[] = [
     { path: '/auth/discord', location: hoverAuthDiscordCallback },
     { path: '/auth/sessioncheck', location: hoverCheckId },
     { path: '/auth/sessionowner', location: hoverCheckSessionOwner },
-    { path: '/socket/users', location: hoverUsers }
+    { path: '/socket/users', location: hoverUsers },
+    { path: '/socket/sessiondata', location: hoverClientSessionData},
+    { path: '/socket/sessionmodify', location: hoverSessionModify }
 ]
 
 export default routes;

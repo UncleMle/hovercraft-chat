@@ -19,7 +19,8 @@ import { openSockets } from './db/entities/hover.openSockets';
 const app : Express = express();
 const port : number = 8081;
 
-AppDataSource.initialize().then(async() => { // Not initilizating database in core file can cause data validation and meta data errors as endpoints attempt to access the database with certain repositories when it has not initilizied yet.
+// Not initializing database in core file can cause data validation and meta data errors as endpoints attempt to access the database with certain repositories when it has not initialized yet.
+AppDataSource.initialize().then(async() => {
 
     apiMethods.Log(`Data Source has been initialized`);
 
@@ -28,8 +29,8 @@ AppDataSource.initialize().then(async() => { // Not initilizating database in co
     const openSockes: Repository<openSockets> = AppDataSource.getRepository(openSockets);
 
     tokenRepo.clear().then(() => apiMethods.Log('Flushed old web tokens'));
-    sessions.clear().then(() => apiMethods.Log('Flushed old sessions'));
-    openSockes.clear().then(() => apiMethods.Log('Flushed old open sockets'));
+    sessions.clear().then(() => apiMethods.Log(red('Flushed old sessions')));
+    openSockes.clear().then(() => apiMethods.Log(red('Flushed old open sockets')));
 
     app.use(cors());
     app.use(morgan('combined'));
@@ -52,59 +53,3 @@ AppDataSource.initialize().then(async() => { // Not initilizating database in co
 }).catch(err => {apiMethods.Log(err)})
 
 export default app;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-setTimeout(() => {
-    async function main() {
-
-        /*
-        const tokenRepo = AppDataSource.getRepository(webTokens);
-
-        const tok = await tokenRepo.findOne({ where: { token: 'Helo asd asd ', timeCreated: 1689525965 } });
-
-        console.log(tok ? 0 : 1);
-        */
-
-        /*
-        await tokenRepo.update(2, {
-            token: 'Asd aisdk asdk asopd kasd ',
-            timeCreated: api.getUnix()
-        });
-        */
-
-        /**const allRecords = await tokenRepo.find();
-
-        console.log(allRecords); */
-
-    }
-
-    main();
-}, 2000);
-

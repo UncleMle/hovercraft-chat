@@ -4,7 +4,7 @@ import { webTokens } from './db/entities/hover.webTokens';
 import api from './api/hover.api';
 import { createServer } from 'http';
 import app from './hover.core';
-import { SendData, SessionUser } from './shared/hover.types';
+import { SendData, SessionUser } from './shared/hover.types';;
 import { Join, Repository } from 'typeorm';
 import { Sessions } from './db/entities/hover.sessions';
 import sendApi from './discord/hover.discord';
@@ -55,9 +55,10 @@ io.on('connection', (socket: Socket): void => {
             if(!findToken) return sendApi.channelSend(conf.managementChannel, `A level two token access validation error occured within process ID: ${process.getuid} | Token: ${joinData.token}`);
             if(!findRoom) return;
 
-            const users: any = findRoom.users;
-            users.push({ socketId: socket.id, token: joinData.token });
+            let users: any = findRoom.users;
+            users == null? users = []: (null);
 
+            users.push({ socketId: socket.id, token: joinData.token });
 
             sessionRepo.update({ sessionId: joinData.roomId }, { users: users });
 
@@ -106,8 +107,9 @@ io.on('connection', (socket: Socket): void => {
             const foundSession: Sessions = await sessionRepo.findOne({ where: { sessionId: requestData.roomId } });
             if(!foundSession) return;
 
-            const sessionUsers: any = foundSession.users;
-            
+            let sessionUsers: any = foundSession.users;
+            if(!sessionUsers) return;
+
             let idx = null;
             sessionUsers.find(function(item: SessionUser, i: number) {
                 if(item.token == requestData.token) {
@@ -125,7 +127,7 @@ io.on('connection', (socket: Socket): void => {
 
         if(sessionFind) {
             const users: any = sessionFind.users;
-            
+
             let idx = null;
             users.find(function(item: SessionUser, i: number) {
                 if(item.socketId == socket.id) {
