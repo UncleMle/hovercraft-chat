@@ -8,9 +8,7 @@ import { webTokens } from '../db/entities/hover.webTokens';
 import sendApi from '../discord/hover.discord';
 import conf from '../discord/discord.conf';
 
-const router = express.Router();
-
-export default router.get('/', async(req: Request, res: Response): Promise<void | boolean | Response> => {
+export default express.Router().get('/', async(req: Request, res: Response): Promise<void | boolean | Response> => {
     const headers: IncomingHttpHeaders = req.headers;
     const headerCheck: Boolean = await api.checkHeaderProps(headers, ['x-auth-token', 'x-auth-roomid']);
     const tokenAuth: boolean = headerCheck? await api.authToken(req.header('x-auth-token')): (null);
