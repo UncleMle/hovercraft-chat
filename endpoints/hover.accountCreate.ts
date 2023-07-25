@@ -1,4 +1,4 @@
-import express, { Request, Response, Router } from 'express';
+import express, { Request, Response, Router, query } from 'express';
 import apiMethods from '../api/hover.api';
 import { IncomingHttpHeaders } from 'http';
 import bcrypt from 'bcrypt';
@@ -7,31 +7,32 @@ import { AppDataSource } from '../db/data-source';
 import { _SHARED } from '../shared/hover.constants';
 import rateLimit, { RateLimitRequestHandler } from 'express-rate-limit';
 import { Repository } from 'typeorm';
-
-const api : apiMethods = new apiMethods();
-const router: Router = express.Router();
+import { red } from 'console-log-colors';
 
 const limiter: RateLimitRequestHandler = rateLimit({
 	windowMs: 30 * 60 * 1000,
-	max: 5,
+	max: 200,
     message: 'Too many accounts created from this IP, please try again later',
 	standardHeaders: true,
-	legacyHeaders: false,
+	legacyHeaders: false
 });
 
-export default router.get('/', limiter, async(req: Request, res: Response): Promise<void | Response> => {
+export default express.Router().get('/', limiter, async(req: Request, res: Response): Promise<void | Response> => {
     const headers: IncomingHttpHeaders = req.headers;
-    const headerCheck: Boolean = await api.checkHeaderProps(headers, ['x-auth-token', 'x-auth-user', 'x-auth-pass', 'x-auth-email']);
-    const tokenAuth: string | boolean = headerCheck? await api.authToken(req.header('x-auth-token')): (null);
+    const headerCheck: Boolean = await apiMethods.checkHeaderProps(headers, ['x-auth-token', 'x-auth-user', 'x-auth-pass', 'x-auth-email']);
+    const tokenAuth: string | boolean = headerCheck? await apiMethods.authToken(req.header('x-auth-token')): (null);
 
     if(headerCheck && tokenAuth) {
 
         try {
             const accRepo: Repository<Accounts> = AppDataSource.getRepository(Accounts);
 
-            console.log('email '+req.header('x-auth-email'));
+            if(!await apiMethods.valEmail(req.header("x-auth-email"))) return res.status(301).send({
+                status: false,
+                error: "Invalid email address"
+            });
 
-            const foundAccount = await accRepo.find({
+            const foundAccount: Accounts[] = await accRepo.find({
                 where: [
                     { username: req.header('x-auth-user') },
                     { email: req.header('x-auth-email') }
@@ -44,7 +45,7 @@ export default router.get('/', limiter, async(req: Request, res: Response): Prom
             });
 
 
-            if (!await api.containsNumbers(req.header('x-auth-pass')) || !await api.containsUppercase(req.header('x-auth-pass')) || req.header('x-auth-pass').length < 5) {
+            if (!await apiMethods.containsNumbers(req.header('x-auth-pass')) || !await apiMethods.containsUppercase(req.header('x-auth-pass')) || req.header('x-auth-pass').length < 5) {
                 res.send({
                     status: false,
                     error: 'Password must contain atleast one number, one uppercase character, one special symbol and have a character length greater than 5.'
@@ -59,23 +60,35 @@ export default router.get('/', limiter, async(req: Request, res: Response): Prom
             account.email = req.header('x-auth-email');
             account.password = hashPass;
             account.banned = false;
-            account.ip = '127.0.0.1';
-            account.createdTime = api.getUnix();
-            account.lastActive = api.getUnix();
+            account.ip = req.socket.remoteAddress;
+            account.createdTime = apiMethods.getUnix();
+            account.lastActive = apiMethods.getUnix();
             account.discordData = null;
             account.totalChatSessions = 0;
             account.adminPunishments = [];
             account.notifications = [];
+            account.adminLevel = 0;
+
+            let accObj: Accounts;
+            let startTime: number = new Date().valueOf();
 
             accRepo.save(account).then(acc => {
-                api.Log(`A new account was created with [SQLID: ${acc.UUID}, username: ${acc.username}]`)
+                apiMethods.Log(`A new account was created with [SQLID: ${acc.UUID}, username: ${acc.username}]`)
+                accObj = acc;
+            }).then(() => {
+                let endTime: number = new Date().valueOf();
+                let queryTime = endTime - startTime;
+
                 res.status(200).send({
                     status: true,
-                    data: `A new account was created with [SQLID: ${acc.UUID}, username: ${acc.username}]`
+                    data: `A new account was created with [SQLID: ${accObj.UUID}, username: ${accObj.username}]`,
+                    queryTime: queryTime+"ms"
                 });
             });
 
-        } catch(e: any) { api.Log((e as Error).message) }
+        } catch(e: any) { apiMethods.Log((e as Error).message) }
 
-    } else return api.errHandle('param', res);
+    } else return apiMethods.errHandle('param', res);
 });
+
+

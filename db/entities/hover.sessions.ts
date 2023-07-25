@@ -1,7 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { messageSave } from "../../shared/hover.types";
 
 @Entity()
-export class webTokens extends BaseEntity {
+export class Sessions extends BaseEntity {
 
     @PrimaryGeneratedColumn()
     id: number
@@ -16,13 +17,13 @@ export class webTokens extends BaseEntity {
     sessionId: string
 
     @Column()
-    adminLevel: number
+    ownerID: number
+
+    @Column("text", { array: true, nullable: true })
+    messages: messageSave[]
 
     @Column()
-    accountId: number
-
-    @Column()
-    accountUUID: string
+    ownerUUID: string
 
     @Column()
     timeCreated: number

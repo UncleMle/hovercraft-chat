@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, EmbedBuilder, ActivityType, Message, Channel, TextChannel, escapeMarkdown } from 'discord.js';
+import { Client, GatewayIntentBits, EmbedBuilder, ActivityType, Message, Channel, TextChannel, escapeMarkdown, MessagePayload, MessageCreateOptions } from 'discord.js';
 import apiMethods from '../api/hover.api';
 import conf from './discord.conf';
 import commandsList from './discord.cmdList';
@@ -7,14 +7,14 @@ import { AppDataSource } from '../db/data-source';
 import { webTokens } from '../db/entities/hover.webTokens';
 import routes from '../hover.routes';
 import { Accounts } from '../db/entities/hover.accounts';
+import { Repository } from 'typeorm';
+import { CommandList } from './discord.cmdList';
 
-const cmds: commands = new commands();
-const api: apiMethods = new apiMethods();
 const client: Client = new Client({ intents: [GatewayIntentBits.DirectMessages, GatewayIntentBits.Guilds, GatewayIntentBits.GuildBans, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
 client.login(conf.token);
 
-client.on('ready', async() => {
+client.on('ready', async(): Promise<void> => {
     client.user.setPresence({
         activities: [{ name: 'hovercraft.chat', type: ActivityType.Playing }],
         status: 'online'
@@ -24,14 +24,14 @@ client.on('ready', async() => {
         const channel = client.channels.cache.get(conf.statChannel) as TextChannel;
 
         channel.messages.fetch(conf.statMsgId)
-        .then(async(message) => {
-                const tokenRepo = AppDataSource.getRepository(webTokens);
-                const accRepo = AppDataSource.getRepository(Accounts);
+        .then(async(message): Promise<void> => {
+                const tokenRepo: Repository<webTokens> = AppDataSource.getRepository(webTokens);
+                const accRepo: Repository<Accounts> = AppDataSource.getRepository(Accounts);
 
-                const allRecords = await tokenRepo.find();
-                const allAccounts = await accRepo.find();
+                const allRecords: webTokens[] = await tokenRepo.find();
+                const allAccounts: Accounts[] = await accRepo.find();
 
-                const serviceStats = new EmbedBuilder()
+                const serviceStats: EmbedBuilder = new EmbedBuilder()
                 .setColor(0x043667)
                 .setTitle('Service Statisics')
                 .setDescription('Current service statistics for hovercraft.chat')
@@ -51,27 +51,25 @@ client.on('ready', async() => {
     }, conf.statUpdateTime*1000)
 });
 
-client.on('messageCreate', async(message: Message<boolean>) => {
+client.on('messageCreate', async(message: Message<boolean>): Promise<void> => {
     if(conf.botCommandChannels.indexOf(message.channelId) != -1 && message.content.startsWith(conf.prefix)) {
         const args : string[] = message.content.slice(conf.prefix.length).trim().split(' ');
-        commandsList.forEach(cmd => {
+        commandsList.forEach((cmd: CommandList)=> {
             if(cmd.commandName == args[0]) {
-                cmds[cmd.commandName](message, args);
+                commands[cmd.commandName.toLowerCase()](message, args);
             }
         })
     }
 });
 
-class sendApi {
-    consoleLog(message: any) {
-        const channel = client.channels.cache.get(conf.botConsoleChannel) as TextChannel;
+export default class sendApi {
+    public static channelSend(channelId: string, message: string | MessagePayload | MessageCreateOptions): void {
+        const channel = client.channels.cache.get(channelId) as TextChannel;
         channel? channel.send(message): (null);
     }
 
-    sendEmbed(channelId: string, embed: EmbedBuilder) {
+    public static sendEmbed(channelId: string, embed: EmbedBuilder) {
         const channel = client.channels.cache.get(channelId) as TextChannel;
         channel? channel.send({ embeds: [embed] }): (null);
     }
 }
-
-export default sendApi;
