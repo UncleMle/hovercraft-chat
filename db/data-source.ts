@@ -28,18 +28,3 @@ export const AppDataSource = new DataSource({
     migrations: [],
     subscribers: [],
 })
-
-AppDataSource.initialize().then(async() => {
-
-    apiMethods.Log(`Data Source has been initialized`);
-
-    const tokenRepo: Repository<webTokens> = AppDataSource.getRepository(webTokens);
-    const sessions: Repository<Sessions> = AppDataSource.getRepository(Sessions);
-    const openSockes: Repository<openSockets> = AppDataSource.getRepository(openSockets);
-
-    tokenRepo.clear().then(() => apiMethods.Log('Flushed old web tokens'));
-    sessions.clear().then(() => apiMethods.Log('Flushed old sessions'));
-    openSockes.clear().then(() => apiMethods.Log('Flushed old open sockets'));
-
-
-}).catch(err => {apiMethods.Log(err)})

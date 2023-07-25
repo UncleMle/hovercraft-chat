@@ -8,7 +8,6 @@ import apiMethods from '../../api/hover.api';
 import conf from '../discord.conf';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import sendApi from '../hover.discord';
-import { Session } from 'inspector';
 import { Sessions } from '../../db/entities/hover.sessions';
 
 export default class cmd {
@@ -91,7 +90,7 @@ export default class cmd {
             accRepo.update({ id: parseInt(args[1]) }, {
                 banned: true
             }).then(async() => {
-                const bannedAccount = await accRepo.findOne({ where: { id: parseInt(args[1]) } });
+                const bannedAccount: Accounts = await accRepo.findOne({ where: { id: parseInt(args[1]) } });
                 if(!bannedAccount) return;
 
                 const successEmbed: EmbedBuilder = new EmbedBuilder()

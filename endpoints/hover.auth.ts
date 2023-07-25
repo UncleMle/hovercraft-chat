@@ -6,9 +6,7 @@ import { AppDataSource } from '../db/data-source';
 import { Repository } from 'typeorm';
 import { IncomingHttpHeaders } from 'http';
 
-const router = express.Router();
-
-export default router.get('/', async(req : Request, res: Response) => {
+export default express.Router().get('/', async(req : Request, res: Response) => {
     const headers: IncomingHttpHeaders = req.headers;
     const headerCheck: Boolean = await apiMethods.checkHeaderProps(headers, ['x-auth-token']);
     const tokenAuth = headerCheck? await apiMethods.authToken(req.header('x-auth-token')):(null);

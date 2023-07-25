@@ -4,9 +4,8 @@ import bcrypt from 'bcrypt';
 import { Accounts } from '../db/entities/hover.accounts';
 import { AppDataSource } from '../db/data-source';
 import { IncomingHttpHeaders } from 'http';
-const router = express.Router();
 
-export default router.get('/', async(req: Request, res: Response): Promise<void> => {
+export default express.Router().get('/', async(req: Request, res: Response): Promise<void> => {
     const headers: IncomingHttpHeaders = req.headers;
     const headerCheck: Boolean = await apiMethods.checkHeaderProps(headers, ['x-auth-token', 'x-auth-user', 'x-auth-pass']);
     const tokenAuth = headerCheck? await apiMethods.authToken(req.header('x-auth-token')): (null);

@@ -9,8 +9,6 @@ import rateLimit, { RateLimitRequestHandler } from 'express-rate-limit';
 import { Repository } from 'typeorm';
 import { red } from 'console-log-colors';
 
-const router: Router = express.Router();
-
 const limiter: RateLimitRequestHandler = rateLimit({
 	windowMs: 30 * 60 * 1000,
 	max: 200,
@@ -19,7 +17,7 @@ const limiter: RateLimitRequestHandler = rateLimit({
 	legacyHeaders: false
 });
 
-export default router.get('/', limiter, async(req: Request, res: Response): Promise<void | Response> => {
+export default express.Router().get('/', limiter, async(req: Request, res: Response): Promise<void | Response> => {
     const headers: IncomingHttpHeaders = req.headers;
     const headerCheck: Boolean = await apiMethods.checkHeaderProps(headers, ['x-auth-token', 'x-auth-user', 'x-auth-pass', 'x-auth-email']);
     const tokenAuth: string | boolean = headerCheck? await apiMethods.authToken(req.header('x-auth-token')): (null);

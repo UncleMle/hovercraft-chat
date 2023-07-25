@@ -7,9 +7,7 @@ import { Accounts } from '../db/entities/hover.accounts';
 import { AppDataSource } from '../db/data-source';
 import { Repository } from 'typeorm';
 
-const router: Router = express.Router();
-
-export default router.get('/', async(req: Request, res: Response): Promise<void | boolean> => {
+export default express.Router().get('/', async(req: Request, res: Response): Promise<void | boolean> => {
 
     const headers: IncomingHttpHeaders = req.headers;
     const headerCheck: Boolean = await apiMethods.checkHeaderProps(headers, ['x-auth-token', 'x-auth-user', 'x-auth-pass']);

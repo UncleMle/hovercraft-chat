@@ -7,8 +7,6 @@ import { Repository } from 'typeorm';
 import { Sessions } from '../db/entities/hover.sessions';
 import rateLimit, { RateLimitRequestHandler } from 'express-rate-limit';
 
-const router: Router = express.Router();
-
 const limiter: RateLimitRequestHandler = rateLimit({
 	windowMs: 5000 * 60 * 1000,
 	max: 200,
@@ -17,7 +15,7 @@ const limiter: RateLimitRequestHandler = rateLimit({
 	legacyHeaders: false
 });
 
-export default router.get('/', limiter, async(req : Request, res : Response): Promise<void | Response | boolean> => {
+export default express.Router().get('/', limiter, async(req : Request, res : Response): Promise<void | Response | boolean> => {
     const headers: IncomingHttpHeaders = req.headers;
     const headerCheck: Boolean = await api.checkHeaderProps(headers, ['x-auth-token']);
     const tokenCheck: Boolean = await api.authToken(req.header('x-auth-token'));
