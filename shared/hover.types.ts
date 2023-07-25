@@ -11,3 +11,8 @@ export type messageSave = {
     accountId: number,
     timeSent: number
 }
+
+export type JoinRoom = {
+    roomId: string,
+    token: string
+}

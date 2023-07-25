@@ -7,6 +7,7 @@ import { webTokens } from "./entities/hover.webTokens";
 import { logs } from "./entities/hover.logs";
 import { Accounts } from "./entities/hover.accounts";
 import { Sessions } from "./entities/hover.sessions";
+import { openSockets } from "./entities/hover.openSockets";
 
 export const AppDataSource = new DataSource({
     type: "postgres",
@@ -21,7 +22,8 @@ export const AppDataSource = new DataSource({
         webTokens,
         logs,
         Accounts,
-        Sessions
+        Sessions,
+        openSockets
     ],
     migrations: [],
     subscribers: [],
@@ -33,9 +35,11 @@ AppDataSource.initialize().then(async() => {
 
     const tokenRepo: Repository<webTokens> = AppDataSource.getRepository(webTokens);
     const sessions: Repository<Sessions> = AppDataSource.getRepository(Sessions);
+    const openSockes: Repository<openSockets> = AppDataSource.getRepository(openSockets);
 
     tokenRepo.clear().then(() => apiMethods.Log('Flushed old web tokens'));
     sessions.clear().then(() => apiMethods.Log('Flushed old sessions'));
+    openSockes.clear().then(() => apiMethods.Log('Flushed old open sockets'));
 
 
 }).catch(err => {apiMethods.Log(err)})

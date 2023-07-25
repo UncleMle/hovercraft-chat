@@ -1,26 +1,23 @@
-/*
-import express from 'express';
-import apiMethods from '../api/hover.api';
-import socketApp from '../hover.core';
+import express, { Request, Response } from 'express';
+import api from '../api/hover.api';
+import { io } from '../hover.socketEvents';
+import { Repository } from 'typeorm';
+import { openSockets } from '../db/entities/hover.openSockets';
+import { AppDataSource } from '../db/data-source';
 
-const router = express.Router();
-const api = new apiMethods();
+export default express.Router().get('/', async(req: Request, res: Response): Promise<void | boolean | Response> => {
+    const headerCheck: Boolean = await api.checkHeaderProps(req.headers, ['x-auth-token', 'x-auth-roomid']);
+    const tokenAuth: boolean = headerCheck? await api.authToken(req.header('x-auth-token')): (null);
 
-export default router.get('/', async(req, res) => {
-    const token = req.header('x-auth-token');
-    const roomId = req.header('roomId');
-    if(token && roomId) {
-        const auth = await api.authToken(token);
-        if(auth) {
-            const sockets = await socketApp.in('test').fetchSockets();
-            const socketIds = sockets.map(socket => socket.id);
-            res.status(200).send({
-                status: true,
-                info: `${socketIds}`
-            });
-        } else return api.errHandle('auth', res);
-    } else return api.errHandle('param', res);
+    if(!tokenAuth) return api.errHandle('auth', res);
+    if(!headerCheck) return api.errHandle('param', res);
+
+    const clients = io.sockets.adapter.rooms.get(req.header('x-auth-roomid'));
+    const numClients = clients? clients.size :0;
+
+    res.status(200).send({
+        status: true,
+        data: numClients,
+    })
+
 })
-*/
-
-export default true;

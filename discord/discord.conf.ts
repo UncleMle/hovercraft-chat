@@ -9,6 +9,7 @@ type Config = {
     statChannel: string,
     statMsgId: string,
     clientId: string,
+    managementChannel: string,
     clientSecret: string,
     redirectUrl: string
 };
@@ -24,6 +25,7 @@ const config : Config = {
     statChannel: '1128895284106240114',
     statMsgId: '1129109544669298739',
     clientId: '1128841767756759080',
+    managementChannel: '1133131912827900066',
     clientSecret: 'YR3-Ft8VEL-vYsCxxOXkqHUCGVpSGEaq',
     redirectUrl: 'http://localhost:8081/auth/discord'
 }
