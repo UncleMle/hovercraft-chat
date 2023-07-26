@@ -9,6 +9,7 @@ import routes from '../hover.routes';
 import { Accounts } from '../db/entities/hover.accounts';
 import { Repository } from 'typeorm';
 import { CommandList } from './discord.cmdList';
+import { Sessions } from '../db/entities/hover.sessions';
 
 const client: Client = new Client({ intents: [GatewayIntentBits.DirectMessages, GatewayIntentBits.Guilds, GatewayIntentBits.GuildBans, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
@@ -25,11 +26,11 @@ client.on('ready', async(): Promise<void> => {
 
         channel.messages.fetch(conf.statMsgId)
         .then(async(message): Promise<void> => {
-                const tokenRepo: Repository<webTokens> = AppDataSource.getRepository(webTokens);
-                const accRepo: Repository<Accounts> = AppDataSource.getRepository(Accounts);
 
-                const allRecords: webTokens[] = await tokenRepo.find();
-                const allAccounts: Accounts[] = await accRepo.find();
+
+                const allRecords: webTokens[] = await AppDataSource.getRepository(webTokens).find();
+                const allAccounts: Accounts[] = await AppDataSource.getRepository(Accounts).find();
+                const allSessions: Sessions[] = await AppDataSource.getRepository(Sessions).find();
 
                 const serviceStats: EmbedBuilder = new EmbedBuilder()
                 .setColor(0x043667)
@@ -40,7 +41,7 @@ client.on('ready', async(): Promise<void> => {
                     { name: 'Uptime', value: `100.00%`, inline: true },
                     { name: 'Domain', value: `https://hovercraft.chat`, inline: true },
                     { name: 'Total Requests', value: `0`, inline: true },
-                    { name: 'Total Current Chat Sessions', value: `${allRecords.length}`, inline: true },
+                    { name: 'Total Current Chat Sessions', value: `${allSessions.length}`, inline: true },
                     { name: 'Total Accounts registered', value: `${allAccounts.length}`, inline: true }
                 )
                 .setTimestamp()
