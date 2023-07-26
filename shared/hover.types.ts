@@ -16,3 +16,8 @@ export type JoinRoom = {
     roomId: string,
     token: string
 }
+
+export type SessionUser = {
+    socketId: string,
+    token: string
+}

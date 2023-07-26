@@ -4,7 +4,7 @@ import { webTokens } from './db/entities/hover.webTokens';
 import api from './api/hover.api';
 import { createServer } from 'http';
 import app from './hover.core';
-import { SendData } from './shared/hover.types';
+import { SendData, SessionUser } from './shared/hover.types';;
 import { Join, Repository } from 'typeorm';
 import { Sessions } from './db/entities/hover.sessions';
 import sendApi from './discord/hover.discord';
@@ -53,6 +53,14 @@ io.on('connection', (socket: Socket): void => {
             const findRoom: Sessions = await sessionRepo.findOne({ where: { sessionId: joinData.roomId } });
             const findToken: webTokens = await tokenRepo.findOne({ where: { token: joinData.token } });
             if(!findToken) return sendApi.channelSend(conf.managementChannel, `A level two token access validation error occured within process ID: ${process.getuid} | Token: ${joinData.token}`);
+            if(!findRoom) return;
+
+            let users: any = findRoom.users;
+            users == null? users = []: (null);
+
+            users.push({ socketId: socket.id, token: joinData.token });
+
+            sessionRepo.update({ sessionId: joinData.roomId }, { users: users });
 
             const findOpenSocket: openSockets = await openSockets.findOne({ where: { token: joinData.token } });
 
@@ -94,9 +102,43 @@ io.on('connection', (socket: Socket): void => {
 
     })
 
+    socket.on('get-messages', async(requestData: JoinRoom) => {
+        if(requestData.roomId && requestData.token && await api.authToken(requestData.token)) {
+            const foundSession: Sessions = await sessionRepo.findOne({ where: { sessionId: requestData.roomId } });
+            if(!foundSession) return;
+
+            let sessionUsers: any = foundSession.users;
+            if(!sessionUsers) return;
+
+            let idx = null;
+            sessionUsers.find(function(item: SessionUser, i: number) {
+                if(item.token == requestData.token) {
+                    idx = i;
+                }
+            });
+
+            idx?io.to(requestData.roomId).emit('get-messages', foundSession.messages):(null);
+        }
+    })
+
     socket.on('disconnect-server', async() => {
-        const socketDel: openSockets = await openSocketRepo.findOne({ where: { socketId: socket.id } });
-        socketDel?openSocketRepo.delete({ id: socketDel.id }):(null);
+        const socketFind: openSockets = await openSocketRepo.findOne({ where: { socketId: socket.id } });
+        const sessionFind: Sessions = socketFind? await sessionRepo.findOne({ where: { sessionId: socketFind.sessionId} }): (null);
+
+        if(sessionFind) {
+            const users: any = sessionFind.users;
+
+            let idx = null;
+            users.find(function(item: SessionUser, i: number) {
+                if(item.socketId == socket.id) {
+                    idx = i;
+                }
+            })
+            idx? users.splice(1, idx):(null);
+            sessionRepo.update({ sessionId: sessionFind.sessionId }, { users: users });
+        }
+
+        socketFind?openSocketRepo.delete({ id: socketFind.id }):(null);
 
         api.Log(`${socket.id} was disconnected`);
     })

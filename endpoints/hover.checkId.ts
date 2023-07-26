@@ -21,6 +21,7 @@ export default express.Router().get('/', async(req: Request, res: Response): Pro
 
         const findSession: Sessions = await sessionRepo.findOne({ where: { sessionId: req.header('x-auth-roomId') } });
         if(!findSession) return res.status(404).send({ status: false, error: 'Session was not found.' });
+        if(findSession.private) return res.send({ status: false, error: 'Session is private' });
 
         const findToken: webTokens = await tokenRepo.findOne({ where: {token: req.header('x-auth-token')} });
         if(!findToken) return res.status(404).send({ status: false, error: 'Level two token access validation error.' }), sendApi.channelSend(conf.managementChannel, `A level two token access validation error occured within process ID: ${process.getuid} | Token: ${req.header('x-auth-token')}`)

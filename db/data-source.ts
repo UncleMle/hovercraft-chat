@@ -1,6 +1,5 @@
 import "reflect-metadata";
 import { DataSource, Repository } from "typeorm";
-import apiMethods from '../api/hover.api';
 import bcrypt from 'bcrypt';
 
 import { webTokens } from "./entities/hover.webTokens";
