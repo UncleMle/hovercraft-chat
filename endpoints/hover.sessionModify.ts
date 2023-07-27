@@ -31,6 +31,10 @@ export default express.Router().get('/', async(req: Request, res: Response) => {
 
                 break;
             }
+            case 'disband':
+            {
+
+            }
             default: break;
         }
 

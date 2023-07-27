@@ -5,7 +5,7 @@ import apiMethods from './api/hover.api';
 import cors from 'cors';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
-import routes from './hover.routes';
+import { routes } from './hover.routes';
 import 'reflect-metadata';
 
 import dc from './discord/hover.discord';
