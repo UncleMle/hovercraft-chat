@@ -5,7 +5,7 @@ import commandsList from './discord.cmdList';
 import commands from './commands/discord.commands';
 import { AppDataSource } from '../db/data-source';
 import { webTokens } from '../db/entities/hover.webTokens';
-import routes from '../hover.routes';
+import { routes } from '../hover.routes';
 import { Accounts } from '../db/entities/hover.accounts';
 import { Repository } from 'typeorm';
 import { CommandList } from './discord.cmdList';

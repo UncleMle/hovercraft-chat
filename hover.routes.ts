@@ -10,7 +10,7 @@ import hoverUsers from './endpoints/hover.users';
 import hoverClientSessionData from './endpoints/hover.clientSessionData';
 import hoverSessionModify from './endpoints/hover.sessionModify';
 
-let routes: object[] = [
+export let routes: object[] = [
     { path: '/auth', location: hoverAuth },
     { path: '/sessiongen', location: hoverCharGen },
     { path: '/login', location: hoverLogin },
@@ -22,6 +22,12 @@ let routes: object[] = [
     { path: '/socket/users', location: hoverUsers },
     { path: '/socket/sessiondata', location: hoverClientSessionData},
     { path: '/socket/sessionmodify', location: hoverSessionModify }
-]
+];
 
-export default routes;
+
+export let socketEvents: object[] = [
+    { name: 'get-messages' },
+    { name: 'join-room' },
+    { name: 'send-message' },
+    { name: 'get-users' }
+];
