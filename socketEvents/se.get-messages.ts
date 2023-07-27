@@ -1,7 +1,7 @@
 import { JoinRoom, SessionUser } from "@types";
 import { AppDataSource } from "../db/data-source";
 import { Sessions } from "../db/entities/hover.sessions";
-import io from "../hover.socketEvents";
+import { io } from "../hover.core";
 import { Socket } from "socket.io";
 import api from '../api/hover.api';
 

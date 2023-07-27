@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import api from '../api/hover.api';
-import { io } from '../hover.socketEvents';
+import { io } from "../hover.core";
 import { Repository } from 'typeorm';
 import { openSockets } from '../db/entities/hover.openSockets';
 import { AppDataSource } from '../db/data-source';

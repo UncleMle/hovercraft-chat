@@ -2,7 +2,7 @@ import { JoinRoom } from "@types";
 import { AppDataSource } from "../db/data-source";
 import { openSockets } from "../db/entities/hover.openSockets";
 import { Socket } from "socket.io";
-import { io } from '../hover.socketEvents';
+import { io } from "../hover.core";
 import api from "../api/hover.api";
 
 export default async function getUsers(getData: JoinRoom, socket: Socket) {
