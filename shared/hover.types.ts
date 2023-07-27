@@ -21,3 +21,9 @@ export type SessionUser = {
     socketId: string,
     token: string
 }
+
+export type RoomData = {
+    roomId: string,
+    token: string,
+    state: boolean
+}
