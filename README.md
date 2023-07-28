@@ -1,6 +1,7 @@
 # Hovercraft.chat
 
 ### A simple and easy to use chat messaging system.
+#### Disclaimer: Please Bear mind this project is still very much a work in progress so there may be bugs and or features that are not finished.
 
 <div align="center" style="padding-bottom:2vw; padding-top:2vw;">
 <img src="https://i.imgur.com/kosnCeT.png" height=120>
