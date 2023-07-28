@@ -58,7 +58,7 @@ export const AppDataSource = new DataSource({
     subscribers: [],
 })
 ```
-After entering your database and the login credentials you can install the web and backend node packages. To do this type ``npm i`` in both the root directory and in ***/hovercraft-web/***. After doing so you can type ``npm run devstart`` in the root directory and then ``npm run serve`` in ***/hovercraft-web/*** to start the vue web development server.
+After entering your database and the login credentials you can install the web and backend node packages. To do this type ``npm i`` in both the root directory and in ***/client/***. After doing so you can type ``npm run devstart`` in the root directory and then ``npm run serve`` in ***/client/*** to start the vue web development server.
 
 <div align=center>
 <h2 style="padding-bottom:1vw;">Landing Page</h2>

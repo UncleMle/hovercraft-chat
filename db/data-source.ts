@@ -13,8 +13,8 @@ export const AppDataSource = new DataSource({
     host: "localhost",
     port: 5432,
     username: "postgres",
-    password: "rootadmin13",
-    database: "hovercraft.chat",
+    password: "examplepassword123",
+    database: "",
     synchronize: true,
     logging: false,
     entities: [
