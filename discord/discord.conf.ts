@@ -15,18 +15,18 @@ type Config = {
 };
 
 const config : Config = {
-    token: "MTEyODg0MTc2Nzc1Njc1OTA4MA.Gj8-Ek.qP8AhlubB3Ib8BOXSFx2PoafnkIec_VNyl9Fpo",
-    prefix: "=",
-    botCommandChannels: ['1129540425544376320', '1128890078387769475'],
-    botConsoleChannel: '1128890846981410837',
-    developerRoles: ['Developer', 'Founder and Lead Developer'],
-    staffRoles: ['Staff Team'],
-    statUpdateTime: 10,
-    statChannel: '1128895284106240114',
-    statMsgId: '1129109544669298739',
-    clientId: '1128841767756759080',
-    managementChannel: '1133131912827900066',
-    clientSecret: 'YR3-Ft8VEL-vYsCxxOXkqHUCGVpSGEaq',
+    token: "", // Bot token
+    prefix: "=", // Cmd Prefix
+    botCommandChannels: ['', ''], // Channel IDs
+    botConsoleChannel: '', // Channel ID
+    developerRoles: [''], // Role Names eg: Developer Team
+    staffRoles: [''], // Role Names eg: Staff Team
+    statUpdateTime: 10, // Update time for stat edit
+    statChannel: '', // Channel ID
+    statMsgId: '', // Channel ID
+    clientId: '', // Bot Client ID
+    managementChannel: '', // Channel Id
+    clientSecret: '', // Bot Client Secret
     redirectUrl: 'http://localhost:8081/auth/discord'
 }
 
